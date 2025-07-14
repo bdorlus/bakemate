@@ -33,3 +33,7 @@ This project is currently under development. Please refer to the `todo.md` file 
 
 (License information to be added)
 
+
+### Importing Data
+POST /api/v1/imports accepts an Excel file and queues an asynchronous job. Progress can be checked via GET /api/v1/imports/{job_id}.
+
