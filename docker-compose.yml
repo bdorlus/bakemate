@@ -24,8 +24,8 @@ services:
 
   frontend:
     build:
-      context: .
-      dockerfile: frontend/Dockerfile
+      context: ./frontend
+      dockerfile: Dockerfile
     ports:
       - "3000:80" # Nginx in frontend Dockerfile serves on port 80
     volumes:
@@ -49,4 +49,3 @@ volumes:
   # Define named volumes if needed for persistent data outside of bind mounts
   # e.g., postgres_data:
   bakemate_db_data: # For SQLite if not using a file in the repo for dev
-
