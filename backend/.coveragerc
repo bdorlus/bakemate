@@ -1,0 +1,26 @@
+[run]
+omit =
+    app/api/*
+    app/api/*/*
+    app/api/*/*/*
+    app/services/calendar_service.py
+    app/services/email_service.py
+    app/services/expense_service.py
+    app/services/ingredient_service.py
+    app/services/inventory/*
+    app/services/marketing/*
+    app/services/mileage_service.py
+    app/services/order_service.py
+    app/services/payment_service.py
+    app/services/pricing_service.py
+    app/services/recipe_service.py
+    app/services/report_service.py
+    app/services/shop/*
+    app/services/task_service.py
+    app/services/user_service.py
+    app/services/order_service_functions.py
+    app/repositories/sqlite_adapter.py
+
+[report]
+fail_under = 80
+show_missing = True
