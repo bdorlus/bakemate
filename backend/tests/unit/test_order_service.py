@@ -89,3 +89,10 @@ def test_apply_discount_minimum_order():
 
         # Assert the result
         assert discounted_total == pytest.approx(case["expected"], 0.01)
+
+
+def test_service_wrappers_init():
+    from app.services.order_service import OrderService, QuoteService
+
+    assert OrderService().session is None
+    assert QuoteService().session is None

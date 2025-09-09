@@ -116,7 +116,7 @@ class MarketingService:
         current_user: User,
     ) -> Dict[str, Any]:
         """Sends a campaign email to all contacts in a specified segment."""
-        if not settings.SENDGRID_API_KEY or not settings.EMAILS_FROM_EMAIL:
+        if not settings.SENDGRID_API_KEY or not settings.EMAIL_FROM:
             raise HTTPException(
                 status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
                 detail="Email service (SendGrid) is not configured.",

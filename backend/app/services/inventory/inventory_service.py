@@ -54,7 +54,7 @@ class InventoryService:
         # This logic might need adjustment based on the exact order workflow
         if order.status not in [
             OrderStatus.CONFIRMED,
-            OrderStatus.PREPARING,
+            OrderStatus.IN_PROGRESS,
         ]:  # Add other relevant statuses
             # print(f"Order 	hemed_id} not in a state for stock deduction (status: 	hemed.status}).")
             return False  # Or True, if no action is needed for this status
@@ -108,7 +108,7 @@ class InventoryService:
                 baker_user
                 and baker_user.email
                 and settings.SENDGRID_API_KEY
-                and settings.EMAILS_FROM_EMAIL
+                and settings.EMAIL_FROM
             ):
                 try:
                     await self.email_service.send_low_stock_alert(
