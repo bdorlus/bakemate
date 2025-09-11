@@ -9,6 +9,7 @@ import Recipes from './pages/Recipes';
 import RecipeDetail from './pages/RecipeDetail';
 import Ingredients from './pages/Ingredients';
 import Orders from './pages/Orders';
+import Import from './pages/Import';
 import Profile from './pages/Profile';
 import Pricing from './pages/Pricing';
 import Calendar from './pages/Calendar';
@@ -30,6 +31,7 @@ export default function App() {
               <Route path="recipes/:id" element={<RecipeDetail />} />
               <Route path="ingredients" element={<Ingredients />} />
               <Route path="orders" element={<Orders />} />
+              <Route path="import" element={<Import />} />
               <Route path="pricing" element={<Pricing />} />
               <Route path="calendar" element={<Calendar />} />
               <Route path="expenses" element={<Expenses />} />

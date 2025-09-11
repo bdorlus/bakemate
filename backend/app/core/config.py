@@ -59,6 +59,10 @@ class Settings(BaseSettings):
     # Default user settings (example)
     # DEFAULT_USER_HOURLY_RATE: float = 25.0
     # DEFAULT_USER_OVERHEAD_PER_MONTH: float = 100.0
+    # Default mileage reimbursement rate (per mile). Set via env to override.
+    DEFAULT_MILEAGE_REIMBURSEMENT_RATE: float | None = float(
+        os.getenv("DEFAULT_MILEAGE_REIMBURSEMENT_RATE", "0")
+    )
 
     model_config = ConfigDict(case_sensitive=True)
     # If you have a .env file in the root of your project (alongside docker-compose.yml)
