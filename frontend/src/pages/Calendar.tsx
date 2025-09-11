@@ -72,7 +72,7 @@ export default function Calendar() {
             onChange={(e) => setEventTitle(e.target.value)}
             className="border p-1"
           />
-          <label htmlFor="eventDate">date</label>
+          <label htmlFor="eventDate">Event Date</label>
           <input
             id="eventDate"
             type="date"
