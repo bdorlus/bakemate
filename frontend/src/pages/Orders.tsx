@@ -106,7 +106,12 @@ export default function Orders() {
       onExportCSV={() => exportOrdersCSV(ordersQuery.data?.rows ?? [])}
       onExportPDF={() => {
           const el = document.getElementById('orders-table');
-          if (el) exportOrdersPDF(el, label);
+          if (el) {
+            exportOrdersPDF(el, label);
+          } else {
+            console.error("Orders table element not found for PDF export.");
+            window.alert("Unable to export PDF: Orders table not found.");
+          }
         }}
       />
       <OrdersTable
