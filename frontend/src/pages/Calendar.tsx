@@ -65,7 +65,7 @@ export default function Calendar() {
       <section>
         <h2 className="text-xl font-semibold mb-2">Calendar Events</h2>
         <form onSubmit={handleEventSubmit} className="space-x-2">
-          <label htmlFor="eventTitle">title</label>
+          <label htmlFor="eventTitle">Event Title</label>
           <input
             id="eventTitle"
             value={eventTitle}
