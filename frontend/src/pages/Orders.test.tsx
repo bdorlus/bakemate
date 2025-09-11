@@ -10,8 +10,7 @@ class ResizeObserverMock {
   disconnect() {}
 }
 
-// @ts-ignore
-global.ResizeObserver = ResizeObserverMock;
+(global as any).ResizeObserver = ResizeObserverMock;
 
 const queryClient = new QueryClient();
 
