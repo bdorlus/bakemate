@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import DashboardLayout from './pages/Home';
 import Login from './pages/Login';
 import Register from './pages/Register';
@@ -17,11 +18,14 @@ import Expenses from './pages/Expenses';
 import Mileage from './pages/Mileage';
 import Reports from './pages/Reports';
 
+const queryClient = new QueryClient();
+
 export default function App() {
   return (
-    <AuthProvider>
-      <Router>
-        <Routes>
+    <QueryClientProvider client={queryClient}>
+      <AuthProvider>
+        <Router>
+          <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/" element={<PrivateRoute />}>
@@ -41,8 +45,9 @@ export default function App() {
               <Route index element={<Navigate to="/dashboard" replace />} />
             </Route>
           </Route>
-        </Routes>
-      </Router>
-    </AuthProvider>
+          </Routes>
+        </Router>
+      </AuthProvider>
+    </QueryClientProvider>
   );
 }
