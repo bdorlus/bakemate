@@ -34,7 +34,7 @@ This checklist tracks feature work needed to align the frontend with existing ba
 - [x] Add unit tests for components (Jest/React Testing Library)
 - [x] Add unit tests for API layer
 - [x] Configure ESLint/formatter presets
-- [ ] Plan for future Cypress end-to-end tests
+ - [x] Plan for future Cypress end-to-end tests
 
 ## Documentation
 - [ ] Update frontend README with setup commands and module structure
