@@ -1,5 +1,9 @@
-# Ignore dump files
-.dump/
+# Dump files
+.dump/*
+!.dump/endpoints.csv
+
+# Application runtime artifacts
+backend/app_files/
 
 # Environment files
 .env

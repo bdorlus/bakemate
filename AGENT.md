@@ -24,6 +24,7 @@ The project uses pytest and black for backend code and ESLint for the frontend.
 # Backend
 cd backend
 make test unit                       # run tests
+make test-e2e                        # run end-to-end tests
 make lint                            # lint
 
 # Frontend

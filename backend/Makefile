@@ -1,4 +1,4 @@
-.PHONY: run install test help setup lint
+.PHONY: run install test test-e2e help setup lint
 
 VENV_DIR = .venv
 PYTHON=${VENV_DIR}/bin/python
@@ -32,9 +32,10 @@ run: activate setup
 	$(VENV_DIR)/bin/uvicorn main:app --reload --host 0.0.0.0 --port 8000
 
 # Run tests
-test: activate setup
-	$(VENV_DIR)/bin/pytest -v --cov=app tests/$(filter-out $@,$(MAKECMDGOALS))
+test: activate setup ; $(VENV_DIR)/bin/pytest -v --cov=app tests/$(filter-out $@,$(MAKECMDGOALS))
 
+# Run end-to-end tests
+test-e2e: activate setup ; $(VENV_DIR)/bin/pytest -v tests/e2e
 # Allow additional arguments such as `make test unit` without requiring
 # explicit targets for them. The trailing rule consumes any unknown
 # target names so they can be passed through to pytest via MAKECMDGOALS.

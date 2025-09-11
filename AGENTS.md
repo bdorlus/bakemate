@@ -54,7 +54,7 @@ Prefer alternatives that do not require escalation. If escalation is necessary, 
 
 - Setup venv: `cd backend && make setup`
 - Run server: `cd backend && make run`
-- Tests: `cd backend && make test unit` (pytest/coverage), `make lint` (black)
+- Tests: `cd backend && make test unit` (pytest/coverage), `cd backend && make test-e2e` (API e2e), `make lint` (black)
 - Logs: `cd backend && python tools/log_watcher.py` (activate venv first)
 
 ## Frontend Routines
