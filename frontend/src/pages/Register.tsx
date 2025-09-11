@@ -1,14 +1,12 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import apiClient from '../api';
-import { useAuth } from '../context/AuthContext';
 
-export default function Login() {
+export default function Register() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const { login } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -16,21 +14,11 @@ export default function Login() {
     setError(null);
     setLoading(true);
     try {
-      const params = new URLSearchParams();
-      params.append('username', email);
-      params.append('password', password);
-      const response = await apiClient.post(
-        '/auth/login/access-token',
-        params,
-        { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } }
-      );
-      login(response.data.access_token);
-      navigate('/');
-    } catch (error) {
-      const err = error as any;
-      const message = err?.response?.data?.detail || 'Invalid email or password';
+      await apiClient.post('/auth/register', { email, password });
+      navigate('/login');
+    } catch (err: any) {
+      const message = err?.response?.data?.detail || 'Registration failed';
       setError(Array.isArray(message) ? message.join(', ') : String(message));
-      console.error(err);
     } finally {
       setLoading(false);
     }
@@ -39,7 +27,7 @@ export default function Login() {
   return (
     <div className="flex items-center justify-center h-screen bg-gray-100">
       <div className="w-full max-w-md p-8 space-y-8 bg-white rounded-lg shadow-md">
-        <h2 className="text-2xl font-bold text-center">Login</h2>
+        <h2 className="text-2xl font-bold text-center">Create Account</h2>
         <form className="space-y-6" onSubmit={handleSubmit}>
           <div>
             <label className="block text-sm font-medium">Email</label>
@@ -59,6 +47,7 @@ export default function Login() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
+              minLength={6}
             />
           </div>
           {error && (
@@ -71,16 +60,17 @@ export default function Login() {
             disabled={loading}
             className="w-full px-4 py-2 font-bold text-white bg-indigo-600 rounded-md hover:bg-indigo-700 disabled:opacity-60"
           >
-            {loading ? 'Signing in...' : 'Login'}
+            {loading ? 'Creating...' : 'Create Account'}
           </button>
         </form>
         <p className="text-center text-sm text-gray-600">
-          Don't have an account?{' '}
-          <Link to="/register" className="text-indigo-600 hover:underline">
-            Create one
+          Already have an account?{' '}
+          <Link to="/login" className="text-indigo-600 hover:underline">
+            Log in
           </Link>
         </p>
       </div>
     </div>
   );
 }
+
