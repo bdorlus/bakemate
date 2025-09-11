@@ -3,6 +3,10 @@ Order service module for BakeMate backend.
 This module imports and exposes the core order processing functions.
 """
 
+from typing import List, Optional
+
+from sqlmodel import Session, select
+
 # Import all functions from the order_service_functions module
 from app.services.order_service_functions import (
     calculate_order_total,
@@ -17,6 +21,9 @@ from app.services.order_service_functions import (
     create_order,
     update_order_status,
 )
+
+from app.models.order import Order, OrderStatus
+from app.models.user import User
 
 # Re-export all functions to maintain the expected API
 __all__ = [
@@ -41,6 +48,34 @@ class OrderService:
 
     def __init__(self, session=None):
         self.session = session
+
+    async def get_orders_by_user(
+        self,
+        *,
+        current_user: User,
+        skip: int = 0,
+        limit: int = 100,
+        status: Optional[OrderStatus] = None,
+    ) -> List[Order]:
+        """Return orders owned by the given user.
+
+        Args:
+            current_user: The authenticated user requesting orders.
+            skip: Number of records to skip for pagination.
+            limit: Maximum number of records to return.
+            status: Optional status filter.
+
+        Returns:
+            List[Order]: Orders matching the criteria.
+        """
+        if self.session is None:
+            raise ValueError("Database session is required")
+
+        statement = select(Order).where(Order.user_id == current_user.id)
+        if status is not None:
+            statement = statement.where(Order.status == status)
+        statement = statement.offset(skip).limit(limit)
+        return self.session.exec(statement).all()
 
     # Add wrapper methods as needed to maintain compatibility
     # with existing code that uses the OrderService class
