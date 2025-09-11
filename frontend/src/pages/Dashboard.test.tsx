@@ -3,13 +3,10 @@ import { describe, it, expect, vi, beforeAll } from 'vitest';
 import Dashboard from './Dashboard';
 import * as api from '../api/dashboard';
 
+import { setupResizeObserverMock } from '../testUtils/resizeObserverMock';
+
 beforeAll(() => {
-  // Recharts relies on ResizeObserver; provide a minimal stub for tests
-  global.ResizeObserver = class {
-    observe() {}
-    unobserve() {}
-    disconnect() {}
-  } as unknown as typeof ResizeObserver;
+  setupResizeObserverMock();
 });
 
 describe('Dashboard page', () => {
