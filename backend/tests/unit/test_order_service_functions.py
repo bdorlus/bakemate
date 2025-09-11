@@ -5,6 +5,11 @@ from app.services.order_service_functions import (
     calculate_delivery_fee,
     calculate_order_tax,
     calculate_order_total,
+    get_order_by_id,
+    get_order_items,
+    cancel_order,
+    get_orders_by_date_range,
+    update_order_status,
     validate_order_data,
 )
 
@@ -15,6 +20,10 @@ def test_calculate_order_total():
         {"quantity": 1, "unit_price": 4.0},
     ]
     assert calculate_order_total(items) == 11.0
+
+
+def test_calculate_order_total_empty():
+    assert calculate_order_total([]) == 0
 
 
 def test_apply_discount_percentage():
@@ -51,3 +60,72 @@ def test_validate_order_data():
 
     invalid = {**valid, "items": []}
     assert not validate_order_data(invalid)
+
+
+class DummySession:
+    def __init__(self, order=None, items=None):
+        self.order = order
+        self.items = items or []
+
+    def get(self, model, id):
+        return self.order
+
+    def exec(self, statement):
+        class Result:
+            def __init__(self, items):
+                self._items = items
+
+            def all(self):
+                return self._items
+
+        return Result(self.items)
+
+    def commit(self):
+        pass
+
+    def refresh(self, obj):
+        pass
+
+
+def test_get_order_by_id():
+    order = object()
+    session = DummySession(order=order)
+    assert get_order_by_id("123", session) is order
+
+
+def test_get_order_items():
+    items = [object()]
+    session = DummySession(items=items)
+    assert get_order_items("123", session) == items
+
+
+def test_cancel_order_updates_status():
+    class Order:
+        def __init__(self):
+            self.status = "pending"
+
+    order = Order()
+    session = DummySession(order=order)
+    result = cancel_order("123", session)
+    assert result.status == "canceled"
+
+
+def test_update_order_status():
+    class Order:
+        def __init__(self):
+            self.status = "pending"
+
+    order = Order()
+    session = DummySession(order=order)
+    result = update_order_status("123", "shipped", session)
+    assert result.status == "shipped"
+
+
+def test_get_orders_by_date_range():
+    from datetime import datetime, timedelta, timezone
+
+    items = [object()]
+    session = DummySession(items=items)
+    start = datetime.now(timezone.utc) - timedelta(days=1)
+    end = datetime.now(timezone.utc) + timedelta(days=1)
+    assert get_orders_by_date_range(start, end, session) == items

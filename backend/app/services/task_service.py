@@ -5,7 +5,7 @@ from sqlmodel import Session, select
 
 from app.models.task import Task, TaskCreate, TaskUpdate, TaskStatus
 from app.models.user import User
-from app.models.order import Order  # For linking tasks to orders
+from app.models.order import Order, OrderStatus  # For linking tasks to orders
 from app.repositories.sqlite_adapter import SQLiteRepository
 from app.services.email_service import (
     EmailService,
