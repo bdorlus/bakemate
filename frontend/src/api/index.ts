@@ -1,5 +1,5 @@
 import axios, { AxiosError } from 'axios';
-import type { AxiosRequestConfig } from 'axios';
+import type { AxiosRequestConfig, AxiosRequestHeaders } from 'axios';
 
 const apiClient = axios.create({
   // Ensure default points to versioned API prefix
@@ -8,15 +8,16 @@ const apiClient = axios.create({
 
 apiClient.interceptors.request.use((config) => {
   const token = localStorage.getItem('token');
+  config.headers = config.headers ?? {};
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
   // Let axios set multipart boundaries automatically for FormData
   if (config.data instanceof FormData) {
-    if (config.headers && 'Content-Type' in config.headers) {
-      delete (config.headers as any)['Content-Type'];
+    if ('Content-Type' in config.headers) {
+      delete (config.headers as AxiosRequestHeaders)['Content-Type'];
     }
-  } else {
+  } else if (!('Content-Type' in config.headers)) {
     config.headers['Content-Type'] = 'application/json';
   }
   return config;

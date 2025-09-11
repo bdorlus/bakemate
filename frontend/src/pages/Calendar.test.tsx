@@ -27,7 +27,9 @@ describe('Calendar page', () => {
       </AuthProvider>
     );
 
-    fireEvent.change(screen.getAllByLabelText('title')[0], { target: { value: 'New Task' } });
+    fireEvent.change(screen.getByLabelText(/task title/i), {
+      target: { value: 'New Task' },
+    });
     fireEvent.click(screen.getByRole('button', { name: /add task/i }));
 
     expect(taskApi.createTask).toHaveBeenCalledWith({ title: 'New Task', status: 'pending' });
