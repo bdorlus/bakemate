@@ -45,7 +45,7 @@ class Recipe(TenantBaseModel, table=True):
     )  # Auto-updated based on ingredients
 
     # Relationship to User (owner)
-    # owner: Optional["User"] = Relationship(back_populates="recipes")
+    owner: Optional["User"] = Relationship(back_populates="recipes")
 
     # Relationship to Ingredients via the link table
     ingredient_links: List["RecipeIngredientLink"] = Relationship(
@@ -113,11 +113,6 @@ class RecipeRead(SQLModel):
     created_at: str
     updated_at: str
 
-    # Pydantic v2 handles ``uuid.UUID`` and ``datetime`` types natively so
-    # custom JSON encoders are no longer required. Using ``json_encoders``
-    # also triggers a deprecation warning in Pydantic 2.x.  The built-in
-    # serializers already produce ISO formatted datetimes and strings for
-    # UUIDs, so the explicit configuration has been removed.
     model_config = ConfigDict(arbitrary_types_allowed=True)
 
 

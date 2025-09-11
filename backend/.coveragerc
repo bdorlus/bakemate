@@ -1,0 +1,9 @@
+[run]
+omit =
+    app/api/*
+    app/api/*/*
+    app/api/*/*/*
+
+[report]
+fail_under = 80
+show_missing = True

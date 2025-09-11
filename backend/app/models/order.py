@@ -60,6 +60,7 @@ class Order(TenantBaseModel, table=True):
     # customer_id: Optional[uuid.UUID] = Field(default=None, foreign_key="contact.id") # Link to CRM
 
     order_number: str = Field(unique=True, index=True)  # Human-readable order number
+    customer_email: Optional[str] = Field(default=None, index=True)
     status: OrderStatus = Field(default=OrderStatus.INQUIRY)
     payment_status: PaymentStatus = Field(default=PaymentStatus.UNPAID)
 
@@ -107,6 +108,7 @@ class OrderItemRead(ItemBase):
 
 class OrderBase(SQLModel):
     # customer_id: Optional[uuid.UUID] = None
+    customer_email: Optional[str] = None
     due_date: datetime
     delivery_method: Optional[str] = None
     notes_to_customer: Optional[str] = None

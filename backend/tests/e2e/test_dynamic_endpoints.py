@@ -10,7 +10,10 @@ client = TestClient(app)
 def get_endpoints():
     """Read endpoints from CSV file."""
     endpoints = []
-    csv_path = os.path.join(os.path.dirname(__file__), "../../../.dump/endpoints.csv")
+    # Correctly resolve the path to the CSV file
+    csv_path = os.path.abspath(
+        os.path.join(os.path.dirname(__file__), "..", "..", ".dump", "endpoints.csv")
+    )
 
     with open(csv_path, "r") as f:
         reader = csv.DictReader(f)

@@ -1,35 +1,50 @@
 # BakeMate
 
-BakeMate is a web-first SaaS application designed to help solo U.S. bakers manage their business. It aims to match and extend the features of Bake Diary, with additional differentiators like an embeddable online mini-shop, real-time ingredient stock tracking, and email marketing hooks.
+BakeMate is an open source, web-first SaaS platform that helps solo U.S. bakers manage every part of their business. It is built with a **FastAPI** backend and a **React + TypeScript** frontend served via **Nginx**. Docker Compose orchestrates the stack for local development.
 
-## Project Status
+## Features
 
-This project is currently under development. Please refer to the `todo.md` file for a detailed breakdown of milestones and progress.
-
-## Milestones Checklist (from todo.md)
-
-- [ ] **Milestone 0 – Repo & CI (4 hrs)**
-    - [ ] Scaffold monorepo (`/frontend`, `/backend`)
-    - [ ] Set up Docker
-    - [ ] Configure lint/test workflows (GitHub Actions for CI)
-- [ ] **Milestone 1 – Core Data Models & DAL (10 hrs)**
-- [ ] **Milestone 2 – Auth & Users (6 hrs)**
-- [ ] **Milestone 3 – Recipes/Ingredients & Pricing (12 hrs)**
-- [ ] **Milestone 4 – Quotes/Orders & Stripe (14 hrs)**
-- [ ] **Milestone 5 – Calendar & Tasks (8 hrs)**
-- [ ] **Milestone 6 – Expenses/Mileage & Reports (8 hrs)**
-- [ ] **Milestone 7 – Differentiators (15 hrs)**
-- [ ] **Milestone 8 – QA, Docs, Staging Deploy (8 hrs)**
+- Ingredient and recipe management
+- Pricing and order tracking with Stripe integration
+- Calendar and task management
+- Expense and mileage tracking
+- Reports and analytics
+- Differentiators such as an embeddable mini-shop, real-time inventory tracking and email marketing hooks
 
 ## Getting Started
 
-(Instructions to be added once the project is further along)
+The easiest way to try BakeMate is with Docker Compose:
+
+```bash
+docker-compose up --build -d
+```
+
+This will start the backend on port `8000`, the frontend on port `3000`, and an Nginx reverse proxy on port `80`.
+
+For a detailed setup guide, see [docs/developer_guide.md](docs/developer_guide.md). User-facing instructions live in [docs/user_guide.md](docs/user_guide.md).
+
+### Running Checks
+
+Backend linting and tests:
+
+```bash
+cd backend
+make lint
+make test unit
+```
+
+Frontend linting:
+
+```bash
+cd frontend
+npm install
+npm run lint
+```
 
 ## Contributing
 
-(Contribution guidelines to be added)
+Contributions are always welcome! Feel free to open issues or submit pull requests if you find bugs or have ideas for improvements.
 
 ## License
 
-(License information to be added)
-
+License information will be added soon.

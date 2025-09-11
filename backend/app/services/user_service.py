@@ -2,6 +2,7 @@ from typing import Optional
 from uuid import UUID
 
 from sqlmodel import Session, select
+from sqlalchemy.orm import selectinload
 
 from app.models.user import User, UserCreate
 from app.auth.security import get_password_hash, verify_password
@@ -28,7 +29,7 @@ class UserService:
         return user
 
     async def get_user_by_id(self, user_id: UUID) -> Optional[User]:
-        statement = select(User).where(User.id == user_id)
+        statement = select(User).where(User.id == user_id).options(selectinload(User.recipes))
         user = self.session.exec(statement).first()
         return user
 
