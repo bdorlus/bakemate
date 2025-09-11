@@ -13,6 +13,7 @@ export function exportOrdersCSV(orders: Order[]) {
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
+  URL.revokeObjectURL(url);
 }
 
 export async function exportOrdersPDF(element: HTMLElement, rangeLabel: string) {
