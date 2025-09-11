@@ -1,9 +1,6 @@
 import { FormEvent, useEffect, useState } from 'react';
-import {
-  listMileageLogs,
-  createMileageLog,
-  MileageLog
-} from '../api/mileage';
+import { listMileageLogs, createMileageLog } from '../api/mileage';
+import type { MileageLog } from '../api/mileage';
 
 export default function Mileage() {
   const [logs, setLogs] = useState<MileageLog[]>([]);
@@ -84,4 +81,3 @@ export default function Mileage() {
     </div>
   );
 }
-
