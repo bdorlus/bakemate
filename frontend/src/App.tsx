@@ -8,6 +8,7 @@ import Dashboard from './pages/Dashboard';
 import Recipes from './pages/Recipes';
 import Ingredients from './pages/Ingredients';
 import Orders from './pages/Orders';
+import Import from './pages/Import';
 
 export default function App() {
   return (
@@ -22,6 +23,7 @@ export default function App() {
               <Route path="recipes" element={<Recipes />} />
               <Route path="ingredients" element={<Ingredients />} />
               <Route path="orders" element={<Orders />} />
+              <Route path="import" element={<Import />} />
               <Route index element={<Navigate to="/dashboard" replace />} />
             </Route>
           </Route>

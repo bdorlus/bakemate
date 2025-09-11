@@ -14,6 +14,7 @@ export default function DashboardLayout() {
           <Link to="/recipes" className="block px-8 py-3 text-sm hover:bg-gray-700">Recipes</Link>
           <Link to="/ingredients" className="block px-8 py-3 text-sm hover:bg-gray-700">Ingredients</Link>
           <Link to="/orders" className="block px-8 py-3 text-sm hover:bg-gray-700">Orders</Link>
+          <Link to="/import" className="block px-8 py-3 text-sm hover:bg-gray-700">Import</Link>
           {/* Add more links as modules are created */}
         </nav>
         <div className="p-4">

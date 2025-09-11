@@ -57,8 +57,11 @@ class Order(TenantBaseModel, table=True):
     user_id: uuid.UUID = Field(
         foreign_key="user.id"
     )  # The baker/user who owns this order
-    # customer_id: Optional[uuid.UUID] = Field(default=None, foreign_key="contact.id") # Link to CRM
+    customer_id: Optional[uuid.UUID] = Field(default=None, foreign_key="contact.id")  # Link to CRM
 
+    # Basic customer info captured per order (from imports)
+    customer_name: Optional[str] = None
+    customer_company: Optional[str] = None
     order_number: str = Field(unique=True, index=True)  # Human-readable order number
     customer_email: Optional[str] = Field(default=None, index=True)
     status: OrderStatus = Field(default=OrderStatus.INQUIRY)
@@ -67,14 +70,20 @@ class Order(TenantBaseModel, table=True):
     order_date: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     due_date: datetime
     delivery_method: Optional[str] = None  # e.g., Pickup, Delivery
+    delivery_fee: Optional[float] = 0
 
     subtotal: float = Field(default=0)
     tax: float = Field(default=0)
     total_amount: float = Field(default=0)
+    discount_amount: Optional[float] = 0
     deposit_amount: Optional[float] = Field(default=None)
     balance_due: Optional[float] = Field(default=None)
     deposit_due_date: Optional[date] = None
     balance_due_date: Optional[date] = None
+
+    # Event details (from imports)
+    event_type: Optional[str] = None
+    theme_details: Optional[str] = None
 
     notes_to_customer: Optional[str] = None
     internal_notes: Optional[str] = None
@@ -108,14 +117,20 @@ class OrderItemRead(ItemBase):
 
 class OrderBase(SQLModel):
     # customer_id: Optional[uuid.UUID] = None
+    customer_name: Optional[str] = None
+    customer_company: Optional[str] = None
     customer_email: Optional[str] = None
     due_date: datetime
     delivery_method: Optional[str] = None
+    delivery_fee: Optional[float] = 0
+    discount_amount: Optional[float] = 0
     notes_to_customer: Optional[str] = None
     internal_notes: Optional[str] = None
     deposit_amount: Optional[float] = None
     deposit_due_date: Optional[date] = None
     balance_due_date: Optional[date] = None
+    event_type: Optional[str] = None
+    theme_details: Optional[str] = None
 
 
 class OrderCreate(OrderBase):
@@ -144,8 +159,12 @@ class OrderRead(OrderBase):
 
 class OrderUpdate(SQLModel):
     # customer_id: Optional[uuid.UUID] = None
+    customer_name: Optional[str] = None
+    customer_company: Optional[str] = None
+    discount_amount: Optional[float] = None
     due_date: Optional[datetime] = None
     delivery_method: Optional[str] = None
+    delivery_fee: Optional[float] = None
     status: Optional[OrderStatus] = None
     payment_status: Optional[PaymentStatus] = None
     notes_to_customer: Optional[str] = None
@@ -154,6 +173,8 @@ class OrderUpdate(SQLModel):
     deposit_amount: Optional[float] = None
     deposit_due_date: Optional[date] = None
     balance_due_date: Optional[date] = None
+    event_type: Optional[str] = None
+    theme_details: Optional[str] = None
     stripe_payment_intent_id: Optional[str] = None
     stripe_checkout_session_id: Optional[str] = None
 
