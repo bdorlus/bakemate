@@ -1,6 +1,7 @@
 import { FormEvent, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { getRecipe, updateRecipe, deleteRecipe, Recipe } from '../api/recipes';
+import { getRecipe, updateRecipe, deleteRecipe } from '../api/recipes';
+import type { Recipe } from '../api/recipes';
 
 export default function RecipeDetail() {
   const { id } = useParams();
@@ -81,4 +82,3 @@ export default function RecipeDetail() {
     </div>
   );
 }
-

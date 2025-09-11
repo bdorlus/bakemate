@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
-import { getCurrentUser, User } from '../api/users';
+import { getCurrentUser } from '../api/users';
+import type { User } from '../api/users';
 
 export default function Profile() {
   const [user, setUser] = useState<User | null>(null);
@@ -34,4 +35,3 @@ export default function Profile() {
     </div>
   );
 }
-

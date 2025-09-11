@@ -1,10 +1,8 @@
 import { useEffect, useState, FormEvent } from 'react';
-import {
-  listCalendarEvents,
-  createCalendarEvent,
-  CalendarEvent,
-} from '../api/calendar';
-import { listTasks, createTask, Task } from '../api/tasks';
+import { listCalendarEvents, createCalendarEvent } from '../api/calendar';
+import type { CalendarEvent } from '../api/calendar';
+import { listTasks, createTask } from '../api/tasks';
+import type { Task } from '../api/tasks';
 
 export default function Calendar() {
   const [events, setEvents] = useState<CalendarEvent[]>([]);

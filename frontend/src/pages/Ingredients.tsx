@@ -1,10 +1,6 @@
 import { FormEvent, useEffect, useState } from 'react';
-import {
-  Ingredient,
-  listIngredients,
-  createIngredient,
-  updateIngredient,
-} from '../api/ingredients';
+import { listIngredients, createIngredient, updateIngredient } from '../api/ingredients';
+import type { Ingredient } from '../api/ingredients';
 
 export default function Ingredients() {
   const [ingredients, setIngredients] = useState<Ingredient[]>([]);
@@ -170,4 +166,3 @@ export default function Ingredients() {
     </div>
   );
 }
-

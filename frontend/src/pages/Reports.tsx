@@ -1,5 +1,6 @@
 import { FormEvent, useState } from 'react';
-import { getProfitAndLoss, ProfitAndLoss } from '../api/reports';
+import { getProfitAndLoss } from '../api/reports';
+import type { ProfitAndLoss } from '../api/reports';
 
 export default function Reports() {
   const [form, setForm] = useState({ start: '', end: '' });
@@ -52,4 +53,3 @@ export default function Reports() {
     </div>
   );
 }
-

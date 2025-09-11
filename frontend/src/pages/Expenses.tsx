@@ -1,9 +1,6 @@
 import { FormEvent, useEffect, useState } from 'react';
-import {
-  listExpenses,
-  createExpense,
-  Expense
-} from '../api/expenses';
+import { listExpenses, createExpense } from '../api/expenses';
+import type { Expense } from '../api/expenses';
 
 export default function Expenses() {
   const [expenses, setExpenses] = useState<Expense[]>([]);
@@ -82,4 +79,3 @@ export default function Expenses() {
     </div>
   );
 }
-

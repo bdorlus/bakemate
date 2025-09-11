@@ -1,6 +1,7 @@
 import { FormEvent, useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { listRecipes, Recipe, createRecipe } from '../api/recipes';
+import { listRecipes, createRecipe } from '../api/recipes';
+import type { Recipe } from '../api/recipes';
 
 export default function Recipes() {
   const [recipes, setRecipes] = useState<Recipe[]>([]);
