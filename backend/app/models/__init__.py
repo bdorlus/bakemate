@@ -2,7 +2,7 @@
 # It also provides a convenient way to import all models.
 
 from .base import BaseUUIDModel, TenantBaseModel
-from .user import User, UserCreate, UserRead, UserUpdate
+from .user import User, UserCreate, UserRead, UserUpdate, UserReadWithRecipes
 from .ingredient import Ingredient, IngredientCreate, IngredientRead, IngredientUpdate
 from .recipe import (
     Recipe,
@@ -30,6 +30,10 @@ from .task import Task, TaskCreate, TaskRead, TaskUpdate, TaskStatus
 from .expense import Expense, ExpenseCreate, ExpenseRead, ExpenseUpdate, ExpenseCategory
 from .mileage import MileageLog, MileageLogCreate, MileageLogRead, MileageLogUpdate
 
+# Resolve forward references
+UserReadWithRecipes.model_rebuild()
+RecipeRead.model_rebuild()
+
 # You can define __all__ to specify what gets imported with 'from .models import *'
 __all__ = [
     "BaseUUIDModel",
@@ -38,6 +42,7 @@ __all__ = [
     "UserCreate",
     "UserRead",
     "UserUpdate",
+    "UserReadWithRecipes",
     "Ingredient",
     "IngredientCreate",
     "IngredientRead",

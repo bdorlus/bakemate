@@ -5,7 +5,7 @@ from datetime import timedelta
 
 from app.repositories.sqlite_adapter import get_session  # Or your DB session getter
 from app.services.user_service import UserService
-from app.models.user import User, UserRead
+from app.models.user import User, UserRead, UserReadWithRecipes
 from app.auth.dependencies import get_current_active_user, get_current_active_superuser
 from app.auth.jwt import (
     create_access_token,
@@ -83,7 +83,7 @@ async def verify_email(
 
 
 # Example of a protected route requiring an active (verified) user
-@router.get("/users/me", response_model=UserRead)
+@router.get("/users/me", response_model=UserReadWithRecipes)
 async def read_users_me(current_user: UserRead = Depends(get_current_active_user)):
     """
     Test endpoint to get current user, requires active (verified) status.
@@ -94,7 +94,7 @@ async def read_users_me(current_user: UserRead = Depends(get_current_active_user
 # Example of a superuser protected route
 @router.get(
     "/users/all",
-    response_model=list[UserRead],
+    response_model=list[UserReadWithRecipes],
     dependencies=[Depends(get_current_active_superuser)],
 )
 async def read_all_users(
