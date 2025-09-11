@@ -25,3 +25,4 @@ pytest
 httpx
 pytest-cov
 black==25.1.0
+bcrypt==4.1.2
