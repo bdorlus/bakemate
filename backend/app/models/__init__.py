@@ -29,6 +29,7 @@ from .contact import Contact, ContactCreate, ContactRead, ContactUpdate, Contact
 from .task import Task, TaskCreate, TaskRead, TaskUpdate, TaskStatus
 from .expense import Expense, ExpenseCreate, ExpenseRead, ExpenseUpdate, ExpenseCategory
 from .mileage import MileageLog, MileageLogCreate, MileageLogRead, MileageLogUpdate
+from .shop import ShopConfiguration, ShopProduct, PublicShopView, ShopOrderCreate
 
 # You can define __all__ to specify what gets imported with 'from .models import *'
 __all__ = [
@@ -78,4 +79,8 @@ __all__ = [
     "MileageLogCreate",
     "MileageLogRead",
     "MileageLogUpdate",
+    "ShopConfiguration",
+    "ShopProduct",
+    "PublicShopView",
+    "ShopOrderCreate",
 ]

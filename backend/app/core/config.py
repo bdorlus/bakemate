@@ -9,6 +9,9 @@ from dotenv import load_dotenv
 # without modifying the Docker environment directly.
 load_dotenv(dotenv_path=os.path.join(os.path.dirname(__file__), "..", "..", ".env"))
 
+# Resolve project base directory so paths remain stable regardless of CWD
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
+
 
 class Settings(BaseSettings):
     # API settings
@@ -17,7 +20,7 @@ class Settings(BaseSettings):
 
     # APP_FILES_DIR: str = os.getenv("APP_FILES_DIR", "/app/app_files") # For Docker
     APP_FILES_DIR: str = os.getenv(
-        "APP_FILES_DIR", "./app_files"
+        "APP_FILES_DIR", str(BASE_DIR / "app_files")
     )  # For local development
 
     # Database
