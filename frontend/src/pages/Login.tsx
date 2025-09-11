@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import { AxiosError } from 'axios';
 import apiClient from '../api';
 import { useAuth } from '../context/AuthContext';
 
@@ -24,11 +25,11 @@ export default function Login() {
         params,
         { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } }
       );
-      login(response.data.access_token);
+      login(response.data.access_token, response.data.refresh_token);
       navigate('/');
-    } catch (error) {
-      const err = error as any;
-      const message = err?.response?.data?.detail || 'Invalid email or password';
+    } catch (error: unknown) {
+      const err = error as AxiosError<{ detail?: string | string[] }>;
+      const message = err.response?.data?.detail ?? 'Invalid email or password';
       setError(Array.isArray(message) ? message.join(', ') : String(message));
       console.error(err);
     } finally {
@@ -42,8 +43,11 @@ export default function Login() {
         <h2 className="text-2xl font-bold text-center">Login</h2>
         <form className="space-y-6" onSubmit={handleSubmit}>
           <div>
-            <label className="block text-sm font-medium">Email</label>
+            <label htmlFor="email" className="block text-sm font-medium">
+              Email
+            </label>
             <input
+              id="email"
               type="email"
               className="w-full px-3 py-2 mt-1 border rounded-md"
               value={email}
@@ -52,8 +56,11 @@ export default function Login() {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium">Password</label>
+            <label htmlFor="password" className="block text-sm font-medium">
+              Password
+            </label>
             <input
+              id="password"
               type="password"
               className="w-full px-3 py-2 mt-1 border rounded-md"
               value={password}

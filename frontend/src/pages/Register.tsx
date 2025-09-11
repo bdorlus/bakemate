@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import { AxiosError } from 'axios';
 import apiClient from '../api';
 
 export default function Register() {
@@ -16,8 +17,9 @@ export default function Register() {
     try {
       await apiClient.post('/auth/register', { email, password });
       navigate('/login');
-    } catch (err: any) {
-      const message = err?.response?.data?.detail || 'Registration failed';
+    } catch (error: unknown) {
+      const err = error as AxiosError<{ detail?: string | string[] }>;
+      const message = err.response?.data?.detail ?? 'Registration failed';
       setError(Array.isArray(message) ? message.join(', ') : String(message));
     } finally {
       setLoading(false);
@@ -30,8 +32,11 @@ export default function Register() {
         <h2 className="text-2xl font-bold text-center">Create Account</h2>
         <form className="space-y-6" onSubmit={handleSubmit}>
           <div>
-            <label className="block text-sm font-medium">Email</label>
+            <label htmlFor="email" className="block text-sm font-medium">
+              Email
+            </label>
             <input
+              id="email"
               type="email"
               className="w-full px-3 py-2 mt-1 border rounded-md"
               value={email}
@@ -40,8 +45,11 @@ export default function Register() {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium">Password</label>
+            <label htmlFor="password" className="block text-sm font-medium">
+              Password
+            </label>
             <input
+              id="password"
               type="password"
               className="w-full px-3 py-2 mt-1 border rounded-md"
               value={password}
