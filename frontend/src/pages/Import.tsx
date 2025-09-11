@@ -24,8 +24,11 @@ function Uploader({ label, endpoint }: { label: string; endpoint: string }) {
       form.append('file', file);
       const { data } = await apiClient.post(endpoint, form);
       setResult(data);
-    } catch (err: any) {
-      setError(err?.response?.data?.detail || 'Upload failed');
+    } catch (err: unknown) {
+      const message =
+        (err as { response?: { data?: { detail?: string } } })?.response?.data
+          ?.detail || 'Upload failed';
+      setError(message);
     } finally {
       setLoading(false);
     }

@@ -30,4 +30,27 @@ describe('handleApiError', () => {
     requestSpy.mockRestore();
     localStorage.clear();
   });
+
+  it('preserves existing Content-Type header', async () => {
+    const params = new URLSearchParams();
+    params.append('username', 'u');
+    params.append('password', 'p');
+    let capturedHeaders: Record<string, unknown> | undefined;
+    await apiClient.post('/test', params, {
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      adapter: (config) => {
+        capturedHeaders = config.headers;
+        return Promise.resolve({
+          data: {},
+          status: 200,
+          statusText: 'OK',
+          headers: {},
+          config,
+        });
+      },
+    });
+    expect(capturedHeaders?.['Content-Type']).toBe(
+      'application/x-www-form-urlencoded',
+    );
+  });
 });
