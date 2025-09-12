@@ -4,8 +4,8 @@ import {
   createOrder,
   getOrders,
   getOrdersSummary,
-  Order,
 } from '../api/orders';
+import type { Order } from '../api/orders';
 import DateRangePicker from '../components/DateRangePicker';
 import StatusTabs from '../components/StatusTabs';
 import OrdersChart from '../components/OrdersChart';

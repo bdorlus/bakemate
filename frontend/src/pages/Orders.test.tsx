@@ -48,6 +48,8 @@ describe('Orders page', () => {
     await waitFor(() => {
       expect(screen.getByText(/1001/)).toBeInTheDocument();
     });
+    expect(ordersApi.getOrders).toHaveBeenCalled();
+    expect(ordersApi.getOrdersSummary).toHaveBeenCalled();
   });
 });
 
