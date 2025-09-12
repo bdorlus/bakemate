@@ -1,10 +1,6 @@
 import { FormEvent, useEffect, useMemo, useState } from 'react';
-import {
-  ColumnDef,
-  flexRender,
-  getCoreRowModel,
-  useReactTable
-} from '@tanstack/react-table';
+import type { ColumnDef } from '@tanstack/react-table';
+import { flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table';
 import { listExpenses, createExpense } from '../api/expenses';
 import type { Expense } from '../api/expenses';
 
