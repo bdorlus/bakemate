@@ -13,8 +13,8 @@ export default function DateRangePicker({ value, onChange }: Props) {
     >
       <option value="current-month">Current Month</option>
       <option value="ytd">Year-to-Date</option>
-      <option value="2024">2024</option>
-      <option value="2025">2025</option>
+      <option value="2-years">Last 2 Years</option>
+      <option value="all">All</option>
     </select>
   );
 }

@@ -1,4 +1,5 @@
 import apiClient from './index';
+import type { OrdersOverTime, RevenueOverTime } from './dashboard';
 
 interface BackendOrder {
   id: string;
@@ -50,16 +51,26 @@ export interface OrdersQuery {
   filters?: Record<string, string>;
 }
 
-export async function getOrdersSummary(params: {
-  start: string;
-  end: string;
-  status: string;
-}): Promise<OrdersSummaryResponse> {
-  const response = await apiClient.get<{ count: number }>(
-    '/orders/summary',
-    { params },
+export async function getOrdersSummary(range: string): Promise<OrdersSummaryResponse> {
+  const [ordersRes, revenueRes] = await Promise.all([
+    apiClient.get<OrdersOverTime[]>('/dashboard/orders', { params: { range } }),
+    apiClient.get<RevenueOverTime[]>('/dashboard/revenue', { params: { range } }),
+  ]);
+
+  const revenueMap = new Map(revenueRes.data.map((r) => [r.date, r.revenue]));
+  const series: OrdersSummaryPoint[] = ordersRes.data.map((o) => ({
+    date: o.date,
+    orders: o.count,
+    revenue: revenueMap.get(o.date) ?? 0,
+  }));
+  const totals = series.reduce(
+    (acc, cur) => ({
+      orders: acc.orders + cur.orders,
+      revenue: acc.revenue + cur.revenue,
+    }),
+    { orders: 0, revenue: 0 },
   );
-  return { series: [], totals: { orders: response.data.count, revenue: 0 } };
+  return { series, totals };
 }
 
 export async function getOrders(params: OrdersQuery): Promise<OrdersResponse> {
