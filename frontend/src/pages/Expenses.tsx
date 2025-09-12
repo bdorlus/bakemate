@@ -1,7 +1,7 @@
 import { FormEvent, useEffect, useMemo, useState } from 'react';
 import type { ColumnDef } from '@tanstack/react-table';
 import { flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table';
-import { listExpenses, createExpense } from '../api/expenses';
+import { listExpenses, createExpense, updateExpense, deleteExpense } from '../api/expenses';
 import type { Expense } from '../api/expenses';
 
 export default function Expenses() {
@@ -13,6 +13,7 @@ export default function Expenses() {
     category: ''
   });
   const [showModal, setShowModal] = useState(false);
+  const [editingId, setEditingId] = useState<string | null>(null);
   const currentYear = new Date().getFullYear();
   const [yearFilter, setYearFilter] = useState(currentYear.toString());
 
@@ -34,9 +35,7 @@ export default function Expenses() {
     const filtered =
       yearFilter === 'all'
         ? expenses
-        : expenses.filter(
-            (e) => new Date(e.date).getFullYear().toString() === yearFilter
-          );
+        : expenses.filter((e) => (e.date || '').slice(0, 4) === yearFilter);
     return [...filtered].sort(
       (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
     );
@@ -51,6 +50,26 @@ export default function Expenses() {
         accessorKey: 'amount',
         header: 'Amount',
         cell: (info) => `$${info.getValue<number>().toFixed(2)}`
+      },
+      {
+        id: 'actions',
+        header: 'Actions',
+        cell: ({ row }) => (
+          <div className="flex gap-2">
+            <button
+              className="text-blue-600 hover:underline"
+              onClick={() => openEdit(row.original)}
+            >
+              Edit
+            </button>
+            <button
+              className="text-red-600 hover:underline"
+              onClick={() => handleDelete(row.original.id)}
+            >
+              Delete
+            </button>
+          </div>
+        ),
       }
     ],
     []
@@ -65,19 +84,53 @@ export default function Expenses() {
   const handleCreate = async (e: FormEvent) => {
     e.preventDefault();
     try {
-      const newExpense = await createExpense({
-        description: form.description,
-        amount: Number(form.amount),
-        date: form.date,
-        category: form.category || undefined
-      });
-      setExpenses((prev) => [...prev, newExpense]);
+      if (editingId) {
+        const updated = await updateExpense(editingId, {
+          description: form.description,
+          amount: Number(form.amount),
+          date: form.date,
+          category: form.category || undefined,
+        });
+        setExpenses((prev) => prev.map((e) => (e.id === updated.id ? updated : e)));
+      } else {
+        const newExpense = await createExpense({
+          description: form.description,
+          amount: Number(form.amount),
+          date: form.date,
+          category: form.category || undefined,
+        });
+        setExpenses((prev) => [...prev, newExpense]);
+      }
       setForm({ description: '', amount: '', date: '', category: '' });
+      setEditingId(null);
       setShowModal(false);
     } catch (error) {
       console.error(error);
     }
   };
+
+  function openEdit(exp: Expense) {
+    setEditingId(exp.id);
+    setForm({
+      description: exp.description,
+      amount: String(exp.amount ?? ''),
+      date: (exp.date || '').slice(0, 10),
+      category: exp.category ?? '',
+    });
+    setShowModal(true);
+  }
+
+  async function handleDelete(id: string) {
+    const ok = window.confirm('Delete this expense?');
+    if (!ok) return;
+    try {
+      await deleteExpense(id);
+      setExpenses((prev) => prev.filter((e) => e.id !== id));
+    } catch (err) {
+      console.error(err);
+      window.alert('Failed to delete expense');
+    }
+  }
 
   return (
     <div>
@@ -139,6 +192,9 @@ export default function Expenses() {
             onSubmit={handleCreate}
             className="space-y-2 rounded bg-white p-4 shadow"
           >
+            <h2 className="text-lg font-semibold">
+              {editingId ? 'Edit Expense' : 'Add Expense'}
+            </h2>
             <input
               aria-label="description"
               className="w-full border p-2"
@@ -165,8 +221,14 @@ export default function Expenses() {
               type="date"
               value={form.date}
               onChange={(e) => setForm({ ...form, date: e.target.value })}
+              disabled={!!editingId}
               required
             />
+            {editingId && (
+              <p className="text-xs text-gray-600">
+                Editing date is temporarily unavailable.
+              </p>
+            )}
             <input
               aria-label="category"
               className="w-full border p-2"
@@ -178,7 +240,7 @@ export default function Expenses() {
               <button
                 type="button"
                 className="px-4 py-2"
-                onClick={() => setShowModal(false)}
+                onClick={() => { setShowModal(false); setEditingId(null); }}
               >
                 Cancel
               </button>
@@ -186,7 +248,7 @@ export default function Expenses() {
                 type="submit"
                 className="bg-blue-600 px-4 py-2 text-white"
               >
-                Save
+                {editingId ? 'Save Changes' : 'Save'}
               </button>
             </div>
           </form>
