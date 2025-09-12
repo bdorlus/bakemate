@@ -59,7 +59,7 @@ function resolveRange(value: string) {
 
 export default function Orders() {
   const [status, setStatus] = useState('Open');
-  const [range, setRange] = useState('current-month');
+  const [range, setRange] = useState('ytd');
   const [groupBy, setGroupBy] = useState('none');
   const [metric, setMetric] = useState<'orders' | 'revenue'>('orders');
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -81,7 +81,7 @@ export default function Orders() {
         status,
         groupBy,
         page: 1,
-        pageSize: 25,
+        pageSize: 9999, // ignored by API; we fetch all in batches client-side
       }),
   });
 
@@ -136,4 +136,3 @@ export default function Orders() {
     </div>
   );
 }
-

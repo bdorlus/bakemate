@@ -74,15 +74,33 @@ export async function getOrdersSummary(range: string): Promise<OrdersSummaryResp
 }
 
 export async function getOrders(params: OrdersQuery): Promise<OrdersResponse> {
-  const { page, pageSize, status } = params;
-  const response = await apiClient.get<BackendOrder[]>('/orders', {
-    params: {
-      skip: (page - 1) * pageSize,
-      limit: pageSize,
-      status,
-    },
-  });
-  const rows: Order[] = response.data.map((o) => ({
+  const { status, start, end } = params;
+  // Fetch all orders in batches (API max limit 200) and then filter by date range client-side
+  const batchSize = 200;
+  let skip = 0;
+  const all: BackendOrder[] = [];
+  while (true) {
+    const resp = await apiClient.get<BackendOrder[]>('/orders', {
+      params: { skip, limit: batchSize, status },
+    });
+    const batch = resp.data;
+    if (!batch.length) break;
+    all.push(...batch);
+    if (batch.length < batchSize) break;
+    skip += batchSize;
+  }
+
+  let filtered = all;
+  if (start || end) {
+    const startTs = start ? Date.parse(start) : Number.NEGATIVE_INFINITY;
+    const endTs = end ? Date.parse(end) : Number.POSITIVE_INFINITY;
+    filtered = all.filter((o) => {
+      const ts = Date.parse(o.due_date);
+      return ts >= startTs && ts <= endTs;
+    });
+  }
+
+  const rows: Order[] = filtered.map((o) => ({
     id: o.id,
     orderNo: o.order_number,
     customer: o.customer_name ?? '',
@@ -92,7 +110,8 @@ export async function getOrders(params: OrdersQuery): Promise<OrdersResponse> {
     total: o.total_amount,
     priority: 'Normal',
   }));
-  return { rows, page, pageSize, total: rows.length };
+
+  return { rows, page: 1, pageSize: rows.length, total: rows.length };
 }
 
 export async function createOrder(
@@ -113,4 +132,3 @@ export async function updateOrder(
 export async function deleteOrder(id: string): Promise<void> {
   await apiClient.delete(`/orders/${id}`);
 }
-
