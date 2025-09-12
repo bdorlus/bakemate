@@ -20,11 +20,12 @@
 - lucide-react for icons
 
 ## Style Standards
-- **Colors**: soft pastel palette
-  - Sidebar & accents: `bg-blue-600` / `hover:bg-blue-500`
-  - Backgrounds: `bg-pink-100`
-  - Charts: pink `#f9a8d4`, blue `#60a5fa`
-  - Alerts: `text-red-600`
+- **Colors**: use custom Tailwind theme tokens defined in `tailwind.config.js`
+  - Brand: `brand.surface`, `brand.accent`, `brand.ink`
+  - App surfaces: `app.bg`, `app.card`, `app.ring`, `app.text`, `app.muted`, `app.sidebar`, `app.sidebarHover`
+  - Actions: `primary.DEFAULT`, `primary.hover`, `primary.foreground`
+  - Charts: `chart.linePrimary`, `chart.lineSecondary`, `chart.fillFrom`, `chart.fillTo`, `chart.bar1`, `chart.bar2`, `chart.bar3`, `chart.grid`
+  - Badges: `status.openBg`, `status.openFg`, `status.quotedBg`, `status.quotedFg`, `status.completedBg`, `status.completedFg`, `status.lateBg`, `status.lateFg`
 - **Fonts**: Tailwind `font-sans` stack (Inter / system UI)
 - Prefer a minimalist layout with generous whitespace and subtle shadows
 
