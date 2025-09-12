@@ -21,42 +21,41 @@ export default {
         ],
       },
       colors: {
+        // Brand and accents (desktop-first neutral + blue)
         brand: {
-          surface: "#F9F7F5", // light surface
-          accent: "#FF86C1", // whisk pink
-          ink: "#3E1E68", // deep plum
+          surface: "#F5F7FB",
+          accent: "#2563EB",
+          ink: "#0F172A",
         },
-        // App surfaces
-        app: {
-          bg: "#F9F7F5",
-          card: "#FFFFFF",
-          ring: "#F1F5F9",
-          text: "#0F172A",
-          muted: "#64748B",
-          sidebar: "#3E1E68",
-          sidebarHover: "#5B2C86",
-        },
+        // Flattened app tokens to align with classes like bg-app-sidebar
+        'app-bg': "#F5F7FB",
+        'app-card': "#FFFFFF",
+        'app-ring': "#E5E7EB",
+        'app-text': "#0F172A",
+        'app-muted': "#64748B",
+        'app-sidebar': "#334155",
+        'app-sidebarHover': "#475569",
         // Actions
         primary: {
-          DEFAULT: "#FF86C1",
-          hover: "#FB6CAD",
-          foreground: "#0F172A",
+          DEFAULT: "#2563EB",
+          hover: "#1D4ED8",
+          foreground: "#FFFFFF",
         },
         // Charts
         chart: {
-          linePrimary: "#FF86C1",
-          lineSecondary: "#5B2C86",
-          fillFrom: "#FFE0EE",
-          fillTo: "#F9F7F5",
-          grid: "#EAEFF5",
-          bar1: "#FF86C1",
-          bar2: "#C4B5FD",
-          bar3: "#8DE0C1",
+          linePrimary: "#2563EB",
+          lineSecondary: "#60A5FA",
+          fillFrom: "#DBEAFE",
+          fillTo: "#EFF6FF",
+          grid: "#E5E7EB",
+          bar1: "#2563EB",
+          bar2: "#10B981",
+          bar3: "#F59E0B",
         },
         // Badges
         status: {
           openBg: "#FEF3C7", openFg: "#92400E",
-          quotedBg: "#F3E8FF", quotedFg: "#6D28D9",
+          quotedBg: "#E0E7FF", quotedFg: "#3730A3",
           completedBg: "#D1FAE5", completedFg: "#065F46",
           lateBg: "#FFE4E6", lateFg: "#9F1239",
         },
