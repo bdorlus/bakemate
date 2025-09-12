@@ -13,7 +13,8 @@ export default function Expenses() {
     category: ''
   });
   const [showModal, setShowModal] = useState(false);
-  const [yearFilter, setYearFilter] = useState('');
+  const currentYear = new Date().getFullYear();
+  const [yearFilter, setYearFilter] = useState(currentYear.toString());
 
   useEffect(() => {
     const fetchExpenses = async () => {
@@ -27,18 +28,19 @@ export default function Expenses() {
     fetchExpenses();
   }, []);
 
-  const years = useMemo(
-    () => [...new Set(expenses.map((e) => new Date(e.date).getFullYear()))],
-    [expenses]
-  );
+  const years = [currentYear, currentYear - 1, currentYear - 2];
 
-  const filteredExpenses = useMemo(
-    () =>
-      expenses.filter((e) =>
-        yearFilter ? new Date(e.date).getFullYear().toString() === yearFilter : true
-      ),
-    [expenses, yearFilter]
-  );
+  const filteredExpenses = useMemo(() => {
+    const filtered =
+      yearFilter === 'all'
+        ? expenses
+        : expenses.filter(
+            (e) => new Date(e.date).getFullYear().toString() === yearFilter
+          );
+    return [...filtered].sort(
+      (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+    );
+  }, [expenses, yearFilter]);
 
   const columns = useMemo<ColumnDef<Expense>[]>(
     () => [
@@ -88,12 +90,12 @@ export default function Expenses() {
           value={yearFilter}
           onChange={(e) => setYearFilter(e.target.value)}
         >
-          <option value="">All Years</option>
           {years.map((y) => (
             <option key={y} value={y.toString()}>
               {y}
             </option>
           ))}
+          <option value="all">All Years</option>
         </select>
         <button
           className="px-4 py-2 text-white bg-blue-600"
