@@ -21,9 +21,10 @@
 
 ## Style Standards
 - **Colors**: use custom Tailwind theme tokens defined in `tailwind.config.js`
-  - App surfaces: `app.bg`, `app.card`, `app.sidebar`, `app.sidebarHover`
+  - Brand: `brand.surface`, `brand.accent`, `brand.ink`
+  - App surfaces: `app.bg`, `app.card`, `app.ring`, `app.text`, `app.muted`, `app.sidebar`, `app.sidebarHover`
   - Actions: `primary.DEFAULT`, `primary.hover`, `primary.foreground`
-  - Charts: `chart.line`, `chart.fillFrom`, `chart.fillTo`, `chart.barAmber`, `chart.barTeal`, `chart.barSky`
+  - Charts: `chart.linePrimary`, `chart.lineSecondary`, `chart.fillFrom`, `chart.fillTo`, `chart.bar1`, `chart.bar2`, `chart.bar3`, `chart.grid`
   - Badges: `status.openBg`, `status.openFg`, `status.quotedBg`, `status.quotedFg`, `status.completedBg`, `status.completedFg`, `status.lateBg`, `status.lateFg`
 - **Fonts**: Tailwind `font-sans` stack (Inter / system UI)
 - Prefer a minimalist layout with generous whitespace and subtle shadows

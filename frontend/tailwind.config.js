@@ -18,47 +18,47 @@ export default {
           "Roboto",
           "Helvetica",
           "Arial",
-          "Apple Color Emoji",
-          "Segoe UI Emoji",
         ],
       },
       colors: {
+        brand: {
+          surface: "#F9F7F5", // light surface
+          accent: "#FF86C1", // whisk pink
+          ink: "#2A22AA", // deep slate/indigo
+        },
         // App surfaces
         app: {
-          bg: "#FFF1F2", // pink-50 page background
+          bg: "#F9F7F5",
           card: "#FFFFFF",
-          ring: "#F1F5F9", // slate-100
-          text: "#0F172A", // slate-900
-          muted: "#64748B", // slate-500/600
-          sidebar: "#0F172A", // slate-900
-          sidebarHover: "#1F2937", // slate-800
+          ring: "#F1F5F9",
+          text: "#0F172A",
+          muted: "#64748B",
+          sidebar: "#2A22AA",
+          sidebarHover: "#3B32D0",
         },
         // Actions
         primary: {
-          DEFAULT: "#FDA4AF", // rose-300
-          hover: "#FB7185", // rose-400
+          DEFAULT: "#FF86C1",
+          hover: "#FB6CAD",
           foreground: "#0F172A",
         },
         // Charts
         chart: {
-          line: "#7C3AED", // violet-600
-          fillFrom: "#E9D5FF", // violet-200
-          fillTo: "#FCE7F3", // rose-100
-          barAmber: "#FCD34D",
-          barTeal: "#34D399",
-          barSky: "#38BDF8",
-          grid: "#F1F5F9", // slate-100
+          linePrimary: "#FF86C1",
+          lineSecondary: "#2A22AA",
+          fillFrom: "#FFE0EE",
+          fillTo: "#F9F7F5",
+          grid: "#EAEFF5",
+          bar1: "#FF86C1",
+          bar2: "#8EA6FF",
+          bar3: "#8DE0C1",
         },
         // Badges
         status: {
-          openBg: "#FEF3C7", // amber-100
-          openFg: "#92400E", // amber-800
-          quotedBg: "#E0E7FF", // indigo-100
-          quotedFg: "#3730A3", // indigo-800
-          completedBg: "#D1FAE5", // emerald-100
-          completedFg: "#065F46", // emerald-800
-          lateBg: "#FFE4E6", // rose-100
-          lateFg: "#9F1239", // rose-800
+          openBg: "#FEF3C7", openFg: "#92400E",
+          quotedBg: "#E0E7FF", quotedFg: "#3730A3",
+          completedBg: "#D1FAE5", completedFg: "#065F46",
+          lateBg: "#FFE4E6", lateFg: "#9F1239",
         },
       },
       borderRadius: {
