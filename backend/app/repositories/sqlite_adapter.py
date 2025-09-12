@@ -71,17 +71,39 @@ class SQLiteRepository(
         self,
         *,
         skip: int = 0,
-        limit: int = 100,
+        limit: Optional[int] = 100,
         filters: Optional[Dict[str, Any]] = None,
+        sort_by: Optional[str] = None,
+        sort_desc: bool = False,
         **kwargs
     ) -> List[ModelType]:
         with self._get_session() as session:
             statement = select(self.model)
             if filters:
                 for key, value in filters.items():
-                    if hasattr(self.model, key):
+                    if "__" in key:
+                        attr, op = key.split("__", 1)
+                        column = getattr(self.model, attr, None)
+                        if not column:
+                            continue
+                        if op == "gte":
+                            statement = statement.where(column >= value)
+                        elif op == "lte":
+                            statement = statement.where(column <= value)
+                        elif op == "gt":
+                            statement = statement.where(column > value)
+                        elif op == "lt":
+                            statement = statement.where(column < value)
+                    elif hasattr(self.model, key):
                         statement = statement.where(getattr(self.model, key) == value)
-            statement = statement.offset(skip).limit(limit)
+            if sort_by and hasattr(self.model, sort_by):
+                column = getattr(self.model, sort_by)
+                statement = statement.order_by(
+                    column.desc() if sort_desc else column.asc()
+                )
+            statement = statement.offset(skip)
+            if limit is not None:
+                statement = statement.limit(limit)
             objs = session.exec(statement).all()
             return objs
 
