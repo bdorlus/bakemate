@@ -20,6 +20,7 @@ import {
   format,
   startOfMonth,
   startOfYear,
+  subYears,
 } from 'date-fns';
 
 function resolveRange(value: string) {
@@ -35,6 +36,14 @@ function resolveRange(value: string) {
     start = startOfYear(now);
     end = now;
     label = 'Year to Date';
+  } else if (value === '2-years') {
+    start = startOfYear(subYears(now, 1));
+    end = endOfYear(now);
+    label = `${now.getFullYear() - 1}-${now.getFullYear()}`;
+  } else if (value === 'all') {
+    start = new Date(0);
+    end = now;
+    label = 'All Time';
   } else {
     const year = parseInt(value, 10);
     start = startOfYear(new Date(year, 0, 1));
@@ -59,8 +68,8 @@ export default function Orders() {
   const qc = useQueryClient();
 
   const summaryQuery = useQuery({
-    queryKey: ['ordersSummary', start, end, status],
-    queryFn: () => getOrdersSummary({ start, end, status }),
+    queryKey: ['ordersSummary', range],
+    queryFn: () => getOrdersSummary(range),
   });
 
   const ordersQuery = useQuery({
@@ -115,7 +124,7 @@ export default function Orders() {
         }}
       />
       <OrdersTable
-        data={ordersQuery.data?.rows ?? []}
+        data={[...(ordersQuery.data?.rows ?? [])].reverse()}
         onRowClick={(o) => setDetail(o)}
       />
       <OrderDialog

@@ -29,14 +29,24 @@ describe('Orders page', () => {
           total: 100,
           priority: 'Low',
         },
+        {
+          id: '2',
+          orderNo: '1002',
+          customer: 'Bob',
+          event: 'Wedding',
+          status: 'Open',
+          dueDate: '2025-03-02',
+          total: 200,
+          priority: 'High',
+        },
       ],
       page: 1,
       pageSize: 25,
-      total: 1,
+      total: 2,
     });
     vi.spyOn(ordersApi, 'getOrdersSummary').mockResolvedValue({
-      series: [],
-      totals: { orders: 1, revenue: 100 },
+      series: [{ date: 'Jan', orders: 2, revenue: 300 }],
+      totals: { orders: 2, revenue: 300 },
     });
 
     render(
@@ -46,8 +56,11 @@ describe('Orders page', () => {
     );
 
     await waitFor(() => {
-      expect(screen.getByText(/1001/)).toBeInTheDocument();
+      expect(screen.getByText(/1002/)).toBeInTheDocument();
     });
+    const rows = screen.getAllByRole('row');
+    expect(rows[1]).toHaveTextContent('1002');
+    expect(rows[2]).toHaveTextContent('1001');
     expect(ordersApi.getOrders).toHaveBeenCalled();
     expect(ordersApi.getOrdersSummary).toHaveBeenCalled();
   });

@@ -53,18 +53,24 @@ describe('orders API', () => {
   });
 
   it('fetches orders summary', async () => {
-    const responseData = { count: 2 };
-    const spy = vi
-      .spyOn(apiClient, 'get')
-      .mockResolvedValue({ data: responseData } as AxiosResponse<typeof responseData>);
+    const ordersData = [{ date: 'Jan', count: 1 }];
+    const revenueData = [{ date: 'Jan', revenue: 100 }];
+    const spy = vi.spyOn(apiClient, 'get').mockResolvedValueOnce(
+      { data: ordersData } as AxiosResponse<typeof ordersData>,
+    ).mockResolvedValueOnce(
+      { data: revenueData } as AxiosResponse<typeof revenueData>,
+    );
 
-    const result = await getOrdersSummary({ start: '2025-01-01', end: '2025-01-31', status: 'Open' });
-    expect(spy).toHaveBeenCalledWith('/orders/summary', {
-      params: { start: '2025-01-01', end: '2025-01-31', status: 'Open' },
+    const result = await getOrdersSummary('2025');
+    expect(spy).toHaveBeenNthCalledWith(1, '/dashboard/orders', {
+      params: { range: '2025' },
+    });
+    expect(spy).toHaveBeenNthCalledWith(2, '/dashboard/revenue', {
+      params: { range: '2025' },
     });
     expect(result).toEqual({
-      series: [],
-      totals: { orders: 2, revenue: 0 },
+      series: [{ date: 'Jan', orders: 1, revenue: 100 }],
+      totals: { orders: 1, revenue: 100 },
     });
     spy.mockRestore();
   });
