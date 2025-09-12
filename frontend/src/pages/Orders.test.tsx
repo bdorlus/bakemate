@@ -10,7 +10,8 @@ class ResizeObserverMock {
   disconnect() {}
 }
 
-(global as any).ResizeObserver = ResizeObserverMock;
+(globalThis as unknown as { ResizeObserver: typeof ResizeObserver }).ResizeObserver =
+  ResizeObserverMock as unknown as typeof ResizeObserver;
 
 const queryClient = new QueryClient();
 
