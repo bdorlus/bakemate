@@ -24,7 +24,7 @@ export default {
         brand: {
           surface: "#F9F7F5", // light surface
           accent: "#FF86C1", // whisk pink
-          ink: "#2A22AA", // deep slate/indigo
+          ink: "#3E1E68", // deep plum
         },
         // App surfaces
         app: {
@@ -33,8 +33,8 @@ export default {
           ring: "#F1F5F9",
           text: "#0F172A",
           muted: "#64748B",
-          sidebar: "#2A22AA",
-          sidebarHover: "#3B32D0",
+          sidebar: "#3E1E68",
+          sidebarHover: "#5B2C86",
         },
         // Actions
         primary: {
@@ -45,18 +45,18 @@ export default {
         // Charts
         chart: {
           linePrimary: "#FF86C1",
-          lineSecondary: "#2A22AA",
+          lineSecondary: "#5B2C86",
           fillFrom: "#FFE0EE",
           fillTo: "#F9F7F5",
           grid: "#EAEFF5",
           bar1: "#FF86C1",
-          bar2: "#8EA6FF",
+          bar2: "#C4B5FD",
           bar3: "#8DE0C1",
         },
         // Badges
         status: {
           openBg: "#FEF3C7", openFg: "#92400E",
-          quotedBg: "#E0E7FF", quotedFg: "#3730A3",
+          quotedBg: "#F3E8FF", quotedFg: "#6D28D9",
           completedBg: "#D1FAE5", completedFg: "#065F46",
           lateBg: "#FFE4E6", lateFg: "#9F1239",
         },
