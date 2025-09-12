@@ -4,8 +4,8 @@ import {
   getPaginationRowModel,
   getSortedRowModel,
   useReactTable,
-  SortingState,
 } from '@tanstack/react-table';
+import type { SortingState } from '@tanstack/react-table';
 import { useState } from 'react';
 import type { Order } from '../api/orders';
 

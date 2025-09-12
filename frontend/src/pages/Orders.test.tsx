@@ -10,7 +10,8 @@ class ResizeObserverMock {
   disconnect() {}
 }
 
-(global as any).ResizeObserver = ResizeObserverMock;
+(globalThis as unknown as { ResizeObserver: typeof ResizeObserver }).ResizeObserver =
+  ResizeObserverMock as unknown as typeof ResizeObserver;
 
 const queryClient = new QueryClient();
 
@@ -47,6 +48,8 @@ describe('Orders page', () => {
     await waitFor(() => {
       expect(screen.getByText(/1001/)).toBeInTheDocument();
     });
+    expect(ordersApi.getOrders).toHaveBeenCalled();
+    expect(ordersApi.getOrdersSummary).toHaveBeenCalled();
   });
 });
 
