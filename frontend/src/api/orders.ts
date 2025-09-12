@@ -1,5 +1,15 @@
 import apiClient from './index';
 
+interface BackendOrder {
+  id: string;
+  order_number: string;
+  customer_name?: string;
+  event_type?: string;
+  status: string;
+  due_date: string;
+  total_amount: number;
+}
+
 export interface Order {
   id: string;
   orderNo: string;
@@ -45,18 +55,33 @@ export async function getOrdersSummary(params: {
   end: string;
   status: string;
 }): Promise<OrdersSummaryResponse> {
-  const response = await apiClient.get<OrdersSummaryResponse>(
+  const response = await apiClient.get<{ count: number }>(
     '/orders/summary',
     { params },
   );
-  return response.data;
+  return { series: [], totals: { orders: response.data.count, revenue: 0 } };
 }
 
 export async function getOrders(params: OrdersQuery): Promise<OrdersResponse> {
-  const response = await apiClient.get<OrdersResponse>('/orders', {
-    params,
+  const { page, pageSize, status } = params;
+  const response = await apiClient.get<BackendOrder[]>('/orders', {
+    params: {
+      skip: (page - 1) * pageSize,
+      limit: pageSize,
+      status,
+    },
   });
-  return response.data;
+  const rows: Order[] = response.data.map((o) => ({
+    id: o.id,
+    orderNo: o.order_number,
+    customer: o.customer_name ?? '',
+    event: o.event_type ?? '',
+    status: o.status,
+    dueDate: o.due_date,
+    total: o.total_amount,
+    priority: 'Normal',
+  }));
+  return { rows, page, pageSize, total: rows.length };
 }
 
 export async function createOrder(
