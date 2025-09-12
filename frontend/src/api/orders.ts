@@ -7,10 +7,21 @@ interface BackendOrder {
   customer_name?: string;
   event_type?: string;
   status: string;
+  payment_status?: string;
   order_date: string;
   due_date: string;
   delivery_method?: string;
   total_amount: number;
+  subtotal?: number;
+  tax?: number;
+  balance_due?: number | null;
+  deposit_amount?: number | null;
+  deposit_due_date?: string | null;
+  balance_due_date?: string | null;
+  notes_to_customer?: string | null;
+  internal_notes?: string | null;
+  created_at?: string;
+  updated_at?: string;
 }
 
 export interface Order {
@@ -19,10 +30,21 @@ export interface Order {
   customer: string;
   event: string;
   status: string;
+  paymentStatus?: string;
   orderDate: string;
   dueDate: string;
   deliveryMethod: string;
   total: number;
+  subtotal?: number;
+  tax?: number;
+  balanceDue?: number | null;
+  depositAmount?: number | null;
+  depositDueDate?: string | null;
+  balanceDueDate?: string | null;
+  notesToCustomer?: string | null;
+  internalNotes?: string | null;
+  createdAt?: string;
+  updatedAt?: string;
   priority: string;
 }
 
@@ -109,10 +131,21 @@ export async function getOrders(params: OrdersQuery): Promise<OrdersResponse> {
     customer: o.customer_name ?? '',
     event: o.event_type ?? '',
     status: o.status,
+    paymentStatus: o.payment_status,
     orderDate: o.order_date,
     dueDate: o.due_date,
     deliveryMethod: o.delivery_method ?? '',
     total: o.total_amount,
+    subtotal: o.subtotal,
+    tax: o.tax,
+    balanceDue: o.balance_due ?? null,
+    depositAmount: o.deposit_amount ?? null,
+    depositDueDate: o.deposit_due_date ?? null,
+    balanceDueDate: o.balance_due_date ?? null,
+    notesToCustomer: o.notes_to_customer ?? null,
+    internalNotes: o.internal_notes ?? null,
+    createdAt: o.created_at,
+    updatedAt: o.updated_at,
     priority: 'Normal',
   }));
 
