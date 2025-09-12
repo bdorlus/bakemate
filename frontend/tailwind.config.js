@@ -69,7 +69,11 @@ export default {
         card: "0 1px 2px rgba(2,6,23,0.04), 0 8px 24px rgba(2,6,23,0.06)",
         lift: "0 8px 16px rgba(2,6,23,0.10)",
       },
-      transitionDuration: { fast: "150ms", base: "200ms", slow: "300ms" },
+      transitionDuration: {
+        fast: "150ms",
+        base: "200ms",
+        slow: "300ms",
+      },
     },
   },
   plugins: [forms, typography],

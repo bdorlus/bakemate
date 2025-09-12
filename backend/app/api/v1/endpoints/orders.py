@@ -12,8 +12,9 @@ from fastapi import (
 )
 from typing import List, Optional
 from uuid import UUID
+from datetime import date, datetime, timezone
 
-from sqlmodel import Session, select
+from sqlmodel import Session, select, func
 import stripe  # For webhook verification if not done by a library
 
 from app.repositories.sqlite_adapter import get_session
@@ -63,14 +64,57 @@ async def read_orders(
     session: Session = Depends(get_session),
     skip: int = Query(0, ge=0),
     limit: int = Query(100, ge=1, le=200),
-    status_filter: Optional[OrderStatus] = Query(None, alias="status"),
+    status: Optional[str] = Query(None),
     current_user: User = Depends(get_current_active_user),
 ):
     order_service = OrderService(session=session)
+    status_enum: Optional[OrderStatus] = None
+    if status and status.lower() not in {"open"}:
+        try:
+            status_enum = OrderStatus(status.lower())
+        except ValueError:
+            status_enum = None
     orders = await order_service.get_orders_by_user(
-        current_user=current_user, skip=skip, limit=limit, status=status_filter
+        current_user=current_user, skip=skip, limit=limit, status=status_enum
     )
+    if status and status.lower() == "open":
+        orders = [
+            o
+            for o in orders
+            if o.status not in {OrderStatus.COMPLETED, OrderStatus.CANCELLED}
+        ]
     return orders
+
+
+@router.get("/summary")
+async def orders_summary(
+    *,
+    session: Session = Depends(get_session),
+    start: date,
+    end: date,
+    status: Optional[str] = Query(None),
+    current_user: User = Depends(get_current_active_user),
+):
+    start_dt = datetime.combine(start, datetime.min.time(), tzinfo=timezone.utc)
+    end_dt = datetime.combine(end, datetime.max.time(), tzinfo=timezone.utc)
+    stmt = select(func.count(Order.id)).where(
+        Order.user_id == current_user.id,
+        Order.order_date >= start_dt,
+        Order.order_date <= end_dt,
+    )
+    if status:
+        if status.lower() == "open":
+            stmt = stmt.where(
+                Order.status.notin_([OrderStatus.COMPLETED, OrderStatus.CANCELLED])
+            )
+        else:
+            try:
+                status_enum = OrderStatus(status.lower())
+                stmt = stmt.where(Order.status == status_enum)
+            except ValueError:
+                pass
+    total = session.exec(stmt).one()
+    return {"count": int(total)}
 
 
 @router.get("/{order_id}", response_model=OrderRead)
@@ -448,7 +492,12 @@ async def import_orders_from_csv(
     import_dir = resolve_import_dir()
     matches = list(import_dir.glob("*Orders*.csv"))
     if not matches:
-        return {"imported": 0, "skipped": 0, "errors": ["No Orders CSV found."], "files": []}
+        return {
+            "imported": 0,
+            "skipped": 0,
+            "errors": ["No Orders CSV found."],
+            "files": [],
+        }
 
     imported = 0
     skipped = 0
@@ -470,11 +519,16 @@ async def import_orders_from_csv(
                         order_number = (row.get("OrderNumber") or "").strip()
                         if not order_number:
                             skipped += 1
-                            errors.append(f"{file_path.name} line {idx}: Missing OrderNumber")
+                            errors.append(
+                                f"{file_path.name} line {idx}: Missing OrderNumber"
+                            )
                             continue
 
                         # Duplicate check
-                        stmt = select(Order).where(Order.order_number == order_number, Order.user_id == current_user.id)
+                        stmt = select(Order).where(
+                            Order.order_number == order_number,
+                            Order.user_id == current_user.id,
+                        )
                         existing = session.exec(stmt).first()
                         if existing:
                             skipped += 1
@@ -524,7 +578,9 @@ async def import_orders_from_csv(
                             )
                             existing_contact = session.exec(stmt_c2).first()
                         customer_id = None
-                        if existing_contact is None and (contact_name or contact_email or contact_company):
+                        if existing_contact is None and (
+                            contact_name or contact_email or contact_company
+                        ):
                             parts = (contact_name or "").split()
                             first = parts[0] if parts else None
                             last = " ".join(parts[1:]) if len(parts) > 1 else None
@@ -632,7 +688,9 @@ async def import_orders_file(
                 errors.append(f"line {idx}: Missing OrderNumber")
                 continue
             # Duplicate check
-            stmt = select(Order).where(Order.order_number == order_number, Order.user_id == current_user.id)
+            stmt = select(Order).where(
+                Order.order_number == order_number, Order.user_id == current_user.id
+            )
             if session.exec(stmt).first():
                 skipped += 1
                 continue
@@ -679,7 +737,9 @@ async def import_orders_file(
                 )
                 existing_contact = session.exec(stmt_c2).first()
             customer_id = None
-            if existing_contact is None and (contact_name or contact_email or contact_company):
+            if existing_contact is None and (
+                contact_name or contact_email or contact_company
+            ):
                 parts = (contact_name or "").split()
                 first = parts[0] if parts else None
                 last = " ".join(parts[1:]) if len(parts) > 1 else None
