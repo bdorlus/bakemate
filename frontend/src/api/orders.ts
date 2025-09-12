@@ -7,7 +7,9 @@ interface BackendOrder {
   customer_name?: string;
   event_type?: string;
   status: string;
+  order_date: string;
   due_date: string;
+  delivery_method?: string;
   total_amount: number;
 }
 
@@ -17,7 +19,9 @@ export interface Order {
   customer: string;
   event: string;
   status: string;
+  orderDate: string;
   dueDate: string;
+  deliveryMethod: string;
   total: number;
   priority: string;
 }
@@ -44,7 +48,6 @@ export interface OrdersQuery {
   start: string;
   end: string;
   status: string;
-  groupBy: string;
   page: number;
   pageSize: number;
   sort?: string;
@@ -106,7 +109,9 @@ export async function getOrders(params: OrdersQuery): Promise<OrdersResponse> {
     customer: o.customer_name ?? '',
     event: o.event_type ?? '',
     status: o.status,
+    orderDate: o.order_date,
     dueDate: o.due_date,
+    deliveryMethod: o.delivery_method ?? '',
     total: o.total_amount,
     priority: 'Normal',
   }));

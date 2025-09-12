@@ -1,35 +1,19 @@
 import { Download, Plus } from 'lucide-react';
 
 interface Props {
-  groupBy: string;
-  onGroupChange: (value: string) => void;
   onAdd: () => void;
   onExportCSV: () => void;
   onExportPDF: () => void;
 }
 
 export default function OrdersToolbar({
-  groupBy,
-  onGroupChange,
   onAdd,
   onExportCSV,
   onExportPDF,
 }: Props) {
   return (
     <div className="flex justify-between items-center mb-4">
-      <div className="flex items-center gap-2">
-        <label className="text-sm">Group by:</label>
-        <select
-          value={groupBy}
-          onChange={(e) => onGroupChange(e.target.value)}
-          className="border rounded-md p-1 text-sm"
-        >
-          <option value="none">None</option>
-          <option value="event">Event type</option>
-          <option value="customer">Customer</option>
-          <option value="status">Status</option>
-        </select>
-      </div>
+      <div />
       <div className="flex items-center gap-2">
         <button
           onClick={onAdd}

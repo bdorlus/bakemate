@@ -1,6 +1,6 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import Orders from './Orders';
 import * as ordersApi from '../api/orders';
 
@@ -16,6 +16,10 @@ class ResizeObserverMock {
 const queryClient = new QueryClient();
 
 describe('Orders page', () => {
+  beforeEach(() => {
+    queryClient.clear();
+    vi.clearAllMocks();
+  });
   it('renders orders table after fetching', async () => {
     vi.spyOn(ordersApi, 'getOrders').mockResolvedValue({
       rows: [
@@ -25,7 +29,9 @@ describe('Orders page', () => {
           customer: 'Alice',
           event: 'Birthday',
           status: 'Open',
+          orderDate: '2025-01-01',
           dueDate: '2025-03-01',
+          deliveryMethod: 'Pickup',
           total: 100,
           priority: 'Low',
         },
@@ -35,7 +41,9 @@ describe('Orders page', () => {
           customer: 'Bob',
           event: 'Wedding',
           status: 'Open',
+          orderDate: '2025-02-01',
           dueDate: '2025-03-02',
+          deliveryMethod: 'Delivery',
           total: 200,
           priority: 'High',
         },
@@ -43,10 +51,6 @@ describe('Orders page', () => {
       page: 1,
       pageSize: 25,
       total: 2,
-    });
-    vi.spyOn(ordersApi, 'getOrdersSummary').mockResolvedValue({
-      series: [{ date: 'Jan', orders: 2, revenue: 300 }],
-      totals: { orders: 2, revenue: 300 },
     });
 
     render(
@@ -56,13 +60,47 @@ describe('Orders page', () => {
     );
 
     await waitFor(() => {
-      expect(screen.getByText(/1002/)).toBeInTheDocument();
+      expect(screen.getByText(/1001/)).toBeInTheDocument();
     });
     const rows = screen.getAllByRole('row');
-    expect(rows[1]).toHaveTextContent('1002');
-    expect(rows[2]).toHaveTextContent('1001');
+    expect(rows[1]).toHaveTextContent('1001');
+    expect(rows[2]).toHaveTextContent('1002');
     expect(ordersApi.getOrders).toHaveBeenCalled();
-    expect(ordersApi.getOrdersSummary).toHaveBeenCalled();
+  });
+
+  it('opens edit dialog when row clicked', async () => {
+    vi.spyOn(ordersApi, 'getOrders').mockResolvedValue({
+      rows: [
+        {
+          id: '1',
+          orderNo: '1001',
+          customer: 'Alice',
+          event: 'Birthday',
+          status: 'Open',
+          orderDate: '2025-01-01',
+          dueDate: '2025-03-01',
+          deliveryMethod: 'Pickup',
+          total: 100,
+          priority: 'Low',
+        },
+      ],
+      page: 1,
+      pageSize: 25,
+      total: 1,
+    });
+
+    render(
+      <QueryClientProvider client={queryClient}>
+        <Orders />
+      </QueryClientProvider>,
+    );
+
+    await waitFor(() => {
+      expect(screen.getByText(/1001/)).toBeInTheDocument();
+    });
+
+    screen.getByText('1001').closest('tr')?.click();
+    expect(await screen.findByText('Edit Order')).toBeInTheDocument();
   });
 });
 

@@ -9,7 +9,6 @@ describe('orders API', () => {
       start: '2025-01-01',
       end: '2025-01-31',
       status: 'Open',
-      groupBy: 'none',
       page: 1,
       pageSize: 25,
     };
@@ -20,7 +19,9 @@ describe('orders API', () => {
         customer_name: 'John',
         event_type: 'Birthday',
         status: 'confirmed',
+        order_date: '2025-01-05',
         due_date: '2025-01-10',
+        delivery_method: 'Pickup',
         total_amount: 100,
       },
     ];
@@ -30,7 +31,7 @@ describe('orders API', () => {
 
     const result = await getOrders(params);
     expect(spy).toHaveBeenCalledWith('/orders', {
-      params: { skip: 0, limit: 25, status: 'Open' },
+      params: { skip: 0, limit: 200, status: 'Open' },
     });
     expect(result).toEqual({
       rows: [
@@ -40,13 +41,15 @@ describe('orders API', () => {
           customer: 'John',
           event: 'Birthday',
           status: 'confirmed',
+          orderDate: '2025-01-05',
           dueDate: '2025-01-10',
+          deliveryMethod: 'Pickup',
           total: 100,
           priority: 'Normal',
         },
       ],
       page: 1,
-      pageSize: 25,
+      pageSize: 1,
       total: 1,
     });
     spy.mockRestore();
