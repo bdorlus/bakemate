@@ -60,7 +60,7 @@ export default function OrdersTable({ data, onRowClick }: Props) {
             <tr
               key={row.id}
               onClick={() => onRowClick(row.original)}
-              className="hover:bg-pink-50 cursor-pointer"
+              className="hover:bg-app-ring cursor-pointer"
             >
               {row.getVisibleCells().map((cell) => (
                 <td key={cell.id} className="px-3 py-2">
@@ -93,4 +93,3 @@ export default function OrdersTable({ data, onRowClick }: Props) {
     </div>
   );
 }
-
