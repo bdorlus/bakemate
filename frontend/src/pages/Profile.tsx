@@ -5,6 +5,7 @@ import {
   loadProfileSettings,
   saveProfileSettings,
   type ProfileSettings,
+  type ThemePreference,
 } from '../store/profile';
 
 export default function Profile() {
@@ -179,7 +180,6 @@ export default function Profile() {
             <div className="flex items-center gap-4">
               <div className="h-20 w-20 rounded border border-dashed flex items-center justify-center overflow-hidden bg-white dark:bg-gray-900">
                 {settings.logoDataUrl ? (
-                  // eslint-disable-next-line @next/next/no-img-element
                   <img src={settings.logoDataUrl} alt="Logo preview" className="object-contain h-full w-full" />
                 ) : (
                   <img src="/logo-placeholder.svg" alt="No logo" className="h-10 w-10 opacity-60" />
@@ -234,7 +234,12 @@ export default function Profile() {
             <label className="block text-sm font-medium mb-1">Theme</label>
             <select
               value={settings.theme || 'system'}
-              onChange={(e) => setSettings({ ...settings, theme: e.target.value as any })}
+              onChange={(e) =>
+                setSettings({
+                  ...settings,
+                  theme: e.target.value as ThemePreference,
+                })
+              }
               className="w-full rounded border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 px-3 py-2"
             >
               <option value="system">System</option>
