@@ -17,6 +17,9 @@ import Calendar from './pages/Calendar';
 import Expenses from './pages/Expenses';
 import Mileage from './pages/Mileage';
 import Reports from './pages/Reports';
+import IncomeStatement from './pages/reports/IncomeStatement';
+import ExpensesReport from './pages/reports/ExpensesReport';
+import MileageReport from './pages/reports/MileageReport';
 
 const queryClient = new QueryClient();
 
@@ -41,6 +44,9 @@ export default function App() {
               <Route path="expenses" element={<Expenses />} />
               <Route path="mileage" element={<Mileage />} />
               <Route path="reports" element={<Reports />} />
+              <Route path="reports/income-statement" element={<IncomeStatement />} />
+              <Route path="reports/expenses" element={<ExpensesReport />} />
+              <Route path="reports/mileage" element={<MileageReport />} />
               <Route path="profile" element={<Profile />} />
               <Route index element={<Navigate to="/dashboard" replace />} />
             </Route>

@@ -1,4 +1,5 @@
 import apiClient from './index';
+import { getCurrentUser } from './users';
 import type { OrdersOverTime, RevenueOverTime } from './dashboard';
 
 interface BackendOrder {
@@ -152,11 +153,43 @@ export async function getOrders(params: OrdersQuery): Promise<OrdersResponse> {
   return { rows, page: 1, pageSize: rows.length, total: rows.length };
 }
 
+export type OrderCreateInput = {
+  orderDate: string; // yyyy-MM-dd
+  dueDate: string;   // yyyy-MM-dd
+  deliveryMethod?: string;
+  status?: string; // backend enum string
+  notesToCustomer?: string;
+  internalNotes?: string;
+  depositAmount?: number | null;
+  depositDueDate?: string | null; // yyyy-MM-dd
+  balanceDueDate?: string | null; // yyyy-MM-dd
+  total?: number;
+};
+
 export async function createOrder(
-  order: Omit<Order, 'id'>,
+  input: OrderCreateInput,
 ): Promise<Order> {
-  const response = await apiClient.post<Order>('/orders', order);
-  return response.data;
+  // Build backend OrderCreate payload
+  const me = await getCurrentUser();
+  const toDateTime = (d?: string | null) => (d ? `${d}T00:00:00Z` : null);
+  const payload: any = {
+    user_id: me.id,
+    due_date: toDateTime(input.dueDate),
+    delivery_method: input.deliveryMethod ?? null,
+    notes_to_customer: input.notesToCustomer ?? null,
+    internal_notes: input.internalNotes ?? null,
+    deposit_amount: input.depositAmount ?? null,
+    deposit_due_date: input.depositDueDate ?? null,
+    balance_due_date: input.balanceDueDate ?? null,
+    status: input.status ?? 'inquiry',
+    items: [],
+  };
+  // Some backends also accept order_date, include if provided
+  const orderDt = toDateTime(input.orderDate);
+  if (orderDt) (payload as any).order_date = orderDt;
+
+  const response = await apiClient.post<Order>('/orders/', payload);
+  return response.data as any;
 }
 
 export async function updateOrder(

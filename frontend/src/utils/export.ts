@@ -27,3 +27,26 @@ export async function exportOrdersPDF(element: HTMLElement, rangeLabel: string) 
   pdf.save('orders.pdf');
 }
 
+export function exportCSV(data: any[], filename: string) {
+  const csv = Papa.unparse(data);
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.setAttribute('download', filename);
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
+}
+
+export async function exportElementPDF(element: HTMLElement, title: string, filename: string) {
+  const canvas = await html2canvas(element);
+  const imgData = canvas.toDataURL('image/png');
+  const pdf = new jsPDF('p', 'mm', 'a4');
+  const width = pdf.internal.pageSize.getWidth();
+  const height = (canvas.height * width) / canvas.width;
+  pdf.text(title, 10, 10);
+  pdf.addImage(imgData, 'PNG', 0, 20, width, height);
+  pdf.save(filename);
+}

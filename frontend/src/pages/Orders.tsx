@@ -5,7 +5,7 @@ import type { Order } from '../api/orders';
 // Removed StatusTabs; using a Filter button instead
 // Inline toolbar; no external component
 import OrdersTable from '../components/OrdersTable';
-import OrderDialog from '../components/OrderDialog';
+import OrderDialog, { type OrderFormData } from '../components/OrderDialog';
 import { exportOrdersCSV } from '../utils/export';
 import { Filter as FilterIcon, Download as DownloadIcon, Plus as PlusIcon } from 'lucide-react';
 import { endOfYear, format, startOfYear } from 'date-fns';
@@ -84,11 +84,23 @@ export default function Orders() {
     onSuccess: () => qc.invalidateQueries({ queryKey: ['orders'] }),
   });
 
-  function handleSubmit(data: Omit<Order, 'id' | 'orderNo'>) {
+  function handleSubmit(data: OrderFormData) {
     if (editing) {
-      editOrder.mutate({ ...editing, ...data });
+      // For now, edit path uses existing update flow; mapping can be extended later
+      editOrder.mutate({ ...editing, ...data } as any);
     } else {
-      addOrder.mutate({ ...data, orderNo: '' });
+      addOrder.mutate({
+        orderDate: data.orderDate,
+        dueDate: data.dueDate,
+        deliveryMethod: data.deliveryMethod,
+        status: data.status,
+        notesToCustomer: data.notesToCustomer,
+        internalNotes: data.internalNotes,
+        depositAmount: data.depositAmount ?? null,
+        depositDueDate: data.depositDueDate ?? null,
+        balanceDueDate: data.balanceDueDate ?? null,
+        total: data.total ?? 0,
+      });
     }
   }
 
