@@ -29,19 +29,17 @@ export default function Orders() {
   const [filtersOpen, setFiltersOpen] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editing, setEditing] = useState<Order | null>(null);
-  const { start, end, label } = resolveYearRange(year === 'all' ? 'all' : year);
+  const { start, end } = resolveYearRange(year === 'all' ? 'all' : year);
   const qc = useQueryClient();
 
   const ordersQuery = useQuery({
-    queryKey: ['orders', start, end, status],
+    queryKey: ['orders', start, end],
     queryFn: () =>
       getOrders({
         start,
         end,
-        // Fetch all; we'll filter statuses client-side
-        status: undefined as any,
         page: 1,
-        pageSize: 9999, // ignored by API; we fetch all in batches client-side
+        pageSize: 9999,
       }),
   });
 
@@ -68,14 +66,14 @@ export default function Orders() {
   });
 
   const editOrder = useMutation({
-    mutationFn: ({ id, ...data }: Order) => updateOrder(id, data),
+    mutationFn: ({ id, data }: { id: string; data: Partial<Order> }) => updateOrder(id, data),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['orders'] });
     },
   });
 
   const cancelOrder = useMutation({
-    mutationFn: (id: string) => updateOrder(id, { status: 'cancelled' } as any),
+    mutationFn: (id: string) => updateOrder(id, { status: 'cancelled' }),
     onSuccess: () => qc.invalidateQueries({ queryKey: ['orders'] }),
   });
 
@@ -86,8 +84,7 @@ export default function Orders() {
 
   function handleSubmit(data: OrderFormData) {
     if (editing) {
-      // For now, edit path uses existing update flow; mapping can be extended later
-      editOrder.mutate({ ...editing, ...data } as any);
+      editOrder.mutate({ id: editing.id, data });
     } else {
       addOrder.mutate({
         orderDate: data.orderDate,
@@ -195,6 +192,10 @@ export default function Orders() {
       </div>
       <OrdersTable
         data={filteredRows}
+        onRowClick={(o) => {
+          setEditing({ ...o });
+          setDialogOpen(true);
+        }}
         onEdit={(o) => {
           setEditing({ ...o });
           setDialogOpen(true);

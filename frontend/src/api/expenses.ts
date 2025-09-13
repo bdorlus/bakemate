@@ -19,7 +19,6 @@ export async function listExpenses(params?: {
   const all: Expense[] = [];
   const limit = 200;
   let skip = 0;
-  // eslint-disable-next-line no-constant-condition
   while (true) {
     const response = await apiClient.get<Expense[]>('/expenses', {
       params: { skip, limit, ...(params ?? {}) },
@@ -64,9 +63,13 @@ export async function updateExpense(
     try {
       const response = await apiClient.put<Expense>(url, fd);
       return response.data;
-    } catch (err: any) {
-      const msg = String(err?.response?.data ?? err?.message ?? '');
-      const status = err?.response?.status;
+    } catch (err: unknown) {
+      const error = err as {
+        response?: { data?: unknown; status?: number };
+        message?: string;
+      };
+      const msg = String(error.response?.data ?? error.message ?? '');
+      const status = error.response?.status;
       if (status === 500 && msg.toLowerCase().includes('database is locked') && attempt < maxAttempts) {
         await new Promise((r) => setTimeout(r, backoffMs));
         continue;

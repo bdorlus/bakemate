@@ -59,7 +59,7 @@ Prefer alternatives that do not require escalation. If escalation is necessary, 
 
 ## Frontend Routines
 
-- Lint: `cd frontend && npm install && npm run lint`
+- Lint/Test: `cd frontend && npm install && npm run lint && npm test`
 - Dev server/build: follow `frontend/README.md` and Vite scripts; avoid installs unless necessary and approved.
 
 ## Message Style & Structure

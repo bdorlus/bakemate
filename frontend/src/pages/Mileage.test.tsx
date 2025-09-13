@@ -26,6 +26,7 @@ describe('Mileage page', () => {
       </AuthProvider>
     );
 
+    fireEvent.click(screen.getByText(/add log/i));
     fireEvent.change(screen.getByLabelText('date'), {
       target: { value: '2024-01-01' }
     });
@@ -35,7 +36,7 @@ describe('Mileage page', () => {
     fireEvent.change(screen.getByLabelText('description'), {
       target: { value: 'Delivery' }
     });
-    fireEvent.click(screen.getByRole('button', { name: /add log/i }));
+    fireEvent.click(screen.getByRole('button', { name: /save/i }));
 
     expect(mileageApi.createMileageLog).toHaveBeenCalledWith({
       date: '2024-01-01',

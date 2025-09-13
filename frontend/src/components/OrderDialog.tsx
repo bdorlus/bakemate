@@ -53,7 +53,9 @@ export default function OrderDialog({ open, order, onClose, onSubmit }: Props) {
           orderDate: order.orderDate?.slice(0, 10) ?? '',
           dueDate: order.dueDate?.slice(0, 10) ?? '',
           deliveryMethod: order.deliveryMethod ?? '',
-          status: (order.status as any) ?? 'inquiry',
+          status: (ORDER_STATUS.includes(order.status as typeof ORDER_STATUS[number])
+            ? (order.status as typeof ORDER_STATUS[number])
+            : 'inquiry'),
           notesToCustomer: order.notesToCustomer ?? '',
           internalNotes: order.internalNotes ?? '',
           depositAmount: order.depositAmount ?? undefined,
