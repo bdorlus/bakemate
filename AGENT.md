@@ -30,6 +30,7 @@ make lint                            # lint
 # Frontend
 cd frontend && npm install
 npm run lint                         # lint TypeScript/React files
+npm test                             # run frontend unit tests
 ```
 Some tests rely on fixture data and may fail if certain files are missing. At minimum, ensure the test suite executes without import errors.
 

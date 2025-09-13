@@ -27,7 +27,7 @@ export async function exportOrdersPDF(element: HTMLElement, rangeLabel: string) 
   pdf.save('orders.pdf');
 }
 
-export function exportCSV(data: any[], filename: string) {
+export function exportCSV<T extends object>(data: T[], filename: string) {
   const csv = Papa.unparse(data);
   const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
   const url = URL.createObjectURL(blob);

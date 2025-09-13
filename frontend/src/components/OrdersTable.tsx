@@ -5,14 +5,14 @@ import {
   getSortedRowModel,
   useReactTable,
 } from '@tanstack/react-table';
-import type { SortingState, VisibilityState } from '@tanstack/react-table';
+import type { SortingState, VisibilityState, Row } from '@tanstack/react-table';
 import { useMemo, useState } from 'react';
 import { format } from 'date-fns';
 import type { Order } from '../api/orders';
 
 interface Props {
   data: Order[];
-  onRowClick?: (order: Order) => void; // optional; row click disabled by default
+  onRowClick?: (order: Order) => void;
   onEdit?: (order: Order) => void;
   onView?: (order: Order) => void;
   onCancel?: (order: Order) => void;
@@ -189,7 +189,7 @@ export default function OrdersTable({ data, onRowClick, onEdit, onView, onCancel
     {
       id: 'actions',
       header: 'Actions',
-      cell: ({ row }: any) => (
+      cell: ({ row }: { row: Row<Order> }) => (
         <details className="relative">
           <summary className="list-none cursor-pointer select-none px-2 py-1 border rounded-md text-xs inline-flex items-center gap-1">
             Actions
@@ -276,7 +276,8 @@ export default function OrdersTable({ data, onRowClick, onEdit, onView, onCancel
           {table.getRowModel().rows.map((row) => (
             <tr
               key={row.id}
-              className="odd:bg-white even:bg-gray-50"
+              className="odd:bg-white even:bg-gray-50 cursor-pointer"
+              onClick={() => onRowClick?.(row.original)}
             >
               {row.getVisibleCells().map((cell) => (
                 <td key={cell.id} className="px-3 py-2 border-b">

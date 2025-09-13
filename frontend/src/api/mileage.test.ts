@@ -13,7 +13,9 @@ describe('listMileageLogs', () => {
       .mockResolvedValue({ data } as AxiosResponse<MileageLog[]>);
 
     const result = await listMileageLogs();
-    expect(getSpy).toHaveBeenCalledWith('/mileage');
+    expect(getSpy).toHaveBeenCalledWith('/mileage', {
+      params: { skip: 0, limit: 200 },
+    });
     expect(result).toEqual(data);
     getSpy.mockRestore();
   });

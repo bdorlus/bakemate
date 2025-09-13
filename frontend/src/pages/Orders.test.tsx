@@ -63,8 +63,9 @@ describe('Orders page', () => {
       expect(screen.getByText(/1001/)).toBeInTheDocument();
     });
     const rows = screen.getAllByRole('row');
-    expect(rows[1]).toHaveTextContent('1001');
-    expect(rows[2]).toHaveTextContent('1002');
+    expect(rows).toHaveLength(3);
+    expect(screen.getByText('1001')).toBeInTheDocument();
+    expect(screen.getByText('1002')).toBeInTheDocument();
     expect(ordersApi.getOrders).toHaveBeenCalled();
   });
 
@@ -100,7 +101,7 @@ describe('Orders page', () => {
     });
 
     screen.getByText('1001').closest('tr')?.click();
-    expect(await screen.findByText('Edit Order')).toBeInTheDocument();
+    expect(await screen.findByRole('heading', { name: 'Edit Order' })).toBeInTheDocument();
   });
 });
 

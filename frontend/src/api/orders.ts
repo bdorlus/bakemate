@@ -70,7 +70,7 @@ export interface OrdersResponse {
 export interface OrdersQuery {
   start: string;
   end: string;
-  status: string;
+  status?: string;
   page: number;
   pageSize: number;
   sort?: string;
@@ -172,7 +172,7 @@ export async function createOrder(
   // Build backend OrderCreate payload
   const me = await getCurrentUser();
   const toDateTime = (d?: string | null) => (d ? `${d}T00:00:00Z` : null);
-  const payload: any = {
+  const payload: Record<string, unknown> = {
     user_id: me.id,
     due_date: toDateTime(input.dueDate),
     delivery_method: input.deliveryMethod ?? null,
@@ -186,10 +186,10 @@ export async function createOrder(
   };
   // Some backends also accept order_date, include if provided
   const orderDt = toDateTime(input.orderDate);
-  if (orderDt) (payload as any).order_date = orderDt;
+  if (orderDt) payload.order_date = orderDt;
 
   const response = await apiClient.post<Order>('/orders/', payload);
-  return response.data as any;
+  return response.data;
 }
 
 export async function updateOrder(

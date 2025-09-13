@@ -13,7 +13,9 @@ describe('listExpenses', () => {
       .mockResolvedValue({ data } as AxiosResponse<Expense[]>);
 
     const result = await listExpenses();
-    expect(getSpy).toHaveBeenCalledWith('/expenses');
+    expect(getSpy).toHaveBeenCalledWith('/expenses', {
+      params: { skip: 0, limit: 200 },
+    });
     expect(result).toEqual(data);
     getSpy.mockRestore();
   });
